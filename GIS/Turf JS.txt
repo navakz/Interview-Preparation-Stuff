@@ -1,0 +1,102 @@
+point
+bearing
+center
+centroid
+distance
+destination
+pointOnPolygon
+pointOnFeature
+cleanCoords
+buffer
+nearestPointOnLine
+nearestPoint
+toWgs84
+toMercator
+
+
+var point1 = turf.point([-75.343, 39.984]);
+var point2 = turf.point([-75.534, 39.123]);
+
+Takes two points and finds the geographic bearing between them, i.e. the angle measured in degrees from the north line (0 degrees)
+var bearing = turf.bearing(point1, point2);
+
+var features = turf.points([
+  [-97.522259, 35.4691],
+  [-97.502754, 35.463455],
+  [-97.508269, 35.463245]
+]);
+
+var center = turf.center(features);
+Takes a Feature or FeatureCollection and returns the absolute center point of all features.
+
+var polygon = turf.polygon([[[-81, 41], [-88, 36], [-84, 31], [-80, 33], [-77, 39], [-81, 41]]]);
+var centroid = turf.centroid(polygon);
+
+Takes one or more features and calculates the centroid using the mean of all vertices. This lessens the effect of small islands and artifacts when calculating the centroid of a set of polygons.
+
+var point = turf.point([-75.343, 39.984]);
+var distance = 50;
+var bearing = 90;
+var options = {units: 'miles'};
+
+var destination = turf.destination(point, distance, bearing, options);
+Takes a Point and calculates the location of a destination point given a distance in degrees, radians, miles, or kilometers; and bearing in degrees. This uses the Haversine formula to account for global curvature.
+
+
+var polygon = turf.polygon([[
+  [116, -36],
+  [131, -32],
+  [146, -43],
+  [155, -25],
+  [133, -9],
+  [111, -22],
+  [116, -36]
+]]);
+
+var pointOnPolygon = turf.pointOnFeature(polygon);
+Takes a Feature or FeatureCollection and returns a Point guaranteed to be on the surface of the feature.
+
+var line = turf.lineString([[0, 0], [0, 2], [0, 5], [0, 8], [0, 8], [0, 10]]);
+turf.cleanCoords(line).geometry.coordinates;
+//= [[0, 0], [0, 10]]
+
+Removes redundant coordinates from any GeoJSON Geometry.
+
+var point = turf.point([-90.548630, 14.616599]);
+var buffered = turf.buffer(point, 500, {units: 'miles'});
+Calculates a buffer for input features for a given radius. Units supported are miles, kilometers, and degrees.
+
+
+var line = turf.lineString([
+    [-77.031669, 38.878605],
+    [-77.029609, 38.881946],
+    [-77.020339, 38.884084],
+    [-77.025661, 38.885821],
+    [-77.021884, 38.889563],
+    [-77.019824, 38.892368]
+]);
+var pt = turf.point([-77.037076, 38.884017]);
+
+var snapped = turf.nearestPointOnLine(line, pt, {units: 'miles'});
+Takes a Point and a LineString and calculates the closest Point on the (Multi)LineString.
+
+
+var targetPoint = turf.point([28.965797, 41.010086], {"marker-color": "#0F0"});
+var points = turf.featureCollection([
+    turf.point([28.973865, 41.011122]),
+    turf.point([28.948459, 41.024204]),
+    turf.point([28.938674, 41.013324])
+]);
+
+var nearest = turf.nearestPoint(targetPoint, points);
+Takes a reference point and a FeatureCollection of Features with Point geometries and returns the point from the FeatureCollection closest to the reference. This calculation is geodesic.
+
+
+var pt = turf.point([-7903683.846322424, 5012341.663847514]);
+var converted = turf.toWgs84(pt);
+
+Converts a Mercator (EPSG:900913) GeoJSON object into WGS84 projection'
+
+var pt = turf.point([-71,41]);
+var converted = turf.toMercator(pt);
+Converts a WGS84 GeoJSON object into Mercator (EPSG:900913) projection

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Manage Javascript Sourced Data</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" />
+    <link href="gijgo/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="gijgo/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="data/fetchData.js" type="text/javascript"></script>
+    <script src="data/columnData/accessoryUse.js" type="text/javascript"></script>
+    <style type="text/css">
+        .TABLE.gj-grid {
+            table-layout: auto;
+        }
+        
+        body {
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row" style="margin:5% 0% 6% 0%">
+            <div class="col-md-5">
+
+            </div>
+            <div class="col-md-3">
+                <select id="dropdown" width="200">
+                </select>
+            </div>
+            <div class="col-md-4">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table id="grid"></table>
+            </div>
+        </div>
+    </div>
+    <script>
+        var gridDataSource, gridColumnData, grid;
+        $('#dropdown').dropdown({
+            dataSource: [{
+                value: 1,
+                text: 'Acessory Use'
+            }, {
+                value: 2,
+                text: 'Cities'
+            }, {
+                value: 3,
+                text: 'Civic & Recreational Use'
+            }, {
+                value: 4,
+                text: 'Commercial Industrial Use'
+            }, {
+                value: 5,
+                text: 'Zone District Def'
+            }, {
+                value: 6,
+                text: 'Zone District PDR'
+            }, {
+                value: 7,
+                text: 'Zone District PDR RM'
+            }],
+            valueField: 'value',
+            change: function(e) {
+                var getVal = document.getElementById("dropdown").value;
+                getData(parseInt(getVal));
+                getColumnsData(parseInt(getVal));
+                fillGrid();
+            }
+        });
+
+        function getColumnsData(index) {
+            gridColumnData = [];
+            switch (index) {
+                case 1:
+                    gridColumnData = accessoryUseColumnData;
+                    break;
+                case 2:
+                    gridColumnData = [{
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }];
+                    break;
+                case 3:
+                    gridColumnData = [{
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }];
+                    break;
+                case 4:
+                    gridColumnData = [{
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }];
+                    break;
+                case 5:
+                    gridColumnData = [{
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }];
+                    break;
+                case 6:
+                    gridColumnData = [{
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }];
+                    break;
+                case 7:
+                    gridColumnData = [{
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }, {
+                        field: '',
+                        width: ''
+                    }];
+                    break;
+                default:
+                    gridColumnData = alert();
+                    break;
+            }
+        }
+
+        function getData(index) {
+            gridDataSource = [];
+            switch (index) {
+                case 1:
+                    gridDataSource = getServerData("accessoryuse")[0]["miramar_accessoryuse"];
+                    break;
+                case 2:
+                    gridDataSource = getServerData("cities")[0]["miramar_cities"];
+                    break;
+                case 3:
+                    gridDataSource = getServerData("civicnrecreationaluse")[0]["miramar_civicnrecreationaluse"];
+                    break;
+                case 4:
+                    gridDataSource = getServerData("commercialnindustrialuse")[0]["miramar_commercialnindustrialuse"];
+                    break;
+                case 5:
+                    gridDataSource = getServerData("zonedistrictdef")[0]["miramar_zonedistrictdef"];
+                    break;
+                case 6:
+                    gridDataSource = getServerData("zonedistrictpdrrm")[0]["miramar_zonedistrictpdrrm"];
+                    break;
+                case 7:
+                    gridDataSource = getServerData("zonedistrictpdr")[0]["miramar_zonedistrictpdr"];
+                    break;
+                default:
+                    gridDataSource = alert();
+                    break;
+            }
+        }
+    </script>
+    <script type="text/javascript">
+        function fillGrid() {
+            console.log(gridColumnData);
+            console.log(gridDataSource);
+            grid = $('#grid').grid({
+                dataSource: gridDataSource,
+                columns: gridColumnData,
+                uiLibrary: 'bootstrap4',
+                inlineEditing: {
+                    mode: 'command'
+                },
+                pager: {
+                    limit: 5
+                },
+                detailTemplate: '<div class="row" style="margin:5px;padding:5px"></div>',
+                responsive: true,
+                showHiddenColumnsAsDetails: true
+            });
+        }
+    </script>
+</body>
+
+</html>

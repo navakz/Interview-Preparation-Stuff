@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<!-- Author : Naveen Swayamvarpu -->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- JQUERY CDN -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- BOOTSTRAP Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapweb.css">
+    <link rel="stylesheet" href="css/MarkerCluster.css" />
+    <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="css/leaflet-search.css" />
+    <link rel="stylesheet" href="css/leaflet.draw.css" />
+    <link rel="stylesheet" href="css/leaflet.measurecontrol.css" />
+
+    <style>
+        html,
+        body,
+        #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+    <title></title>
+</head>
+
+<body>
+    <div id="map">
+    </div>
+    <script type="text/javascript" src="js/leaflet.js"></script>
+    <script type="text/javascript" src="js/leaflet-heat.js"></script>
+    <script type="text/javascript" src="js/leaflet.rotatedMarker.js"></script>
+    <script type="text/javascript" src="js/OSMBuildings-Leaflet.js"></script>
+    <script type="text/javascript" src="js/leaflet-hash.js"></script>
+    <script type="text/javascript" src="js/Autolinker.min.js"></script>
+    <script type="text/javascript" src="js/leaflet.draw.js"></script>
+    <script type="text/javascript" src="js/leaflet.measurecontrol.js"></script>
+    <script type="text/javascript" src="js/leaflet.markercluster.js"></script>
+    <script type="text/javascript" src="js/leaflet-search.js"></script>
+    <script type="text/javascript" src="js/Leaflet.Control.Custom.js"></script>
+    <script type="text/javascript" src="data/MiramarFutureLandUse.js"></script>
+    <script>
+        var highlightLayer, selectedCity, moreBtn;
+
+        function highlightFeature(e) {
+            layer_MiramarFutureLandUse0.resetStyle(e.layer);
+            highlightLayer = e.target;
+            if (selectedCity != undefined) {
+                selectedCity.remove();
+            }
+            var featureProperty = e.target.feature.properties;
+            if (e.target.feature.geometry.type === 'LineString') {
+                highlightLayer.setStyle({
+                    color: '#ffff00',
+                });
+            } else {
+                highlightLayer.setStyle({
+                    color: '#ffff00',
+                    weight: 6
+                });
+            }
+            selectedCity = L.control.custom({
+                position: 'topleft',
+                content: '<div class="input-group">' +
+                    '    <button class="btn btn-secondary active dropdown-toggle" type="button" data-toggle="dropdown">' + featureProperty['USETYPE'] +
+                    '    <span class="caret"></span></button>' +
+                    '        <ul class="dropdown-menu" style="z-index:100001"><li><a href="#">' + featureProperty['USETYPE'] + '</a></li></ul>' +
+                    '</div>',
+                classes: '',
+                style: {
+                    position: 'absolute',
+                    left: '150px',
+                    top: '0px',
+                    width: '200px',
+                },
+            })
+            selectedCity.addTo(map);
+            moreBtn = L.control.custom({
+                position: 'topleft',
+                content: '<div class="input-group">' +
+                    '    <button id="moreBtn" class="btn btn-secondary btn-sm" style="margin-top:2px;font-size:11px">More >></button>' +
+                    '</div>',
+                classes: '',
+                style: {
+                    position: 'absolute',
+                    left: '150px',
+                    top: '40px',
+                    width: '200px',
+                },
+                events: {
+                    click: function(data) {
+                        L.control.custom({
+                                position: 'topright',
+                                content: '<div class="input-group">' +
+                                    '   <button class="btn btn-success btn-sm">Permitted Users</button>' +
+                                    '   </div>',
+                                classes: '',
+                                style: {
+                                    margin: '5px 20px 20px 0px',
+                                    padding: '0px',
+                                },
+                                events: {
+                                    click: function(data) {
+                                        alert('');
+                                    }
+                                }
+                            })
+                            .addTo(map);
+                        L.control.custom({
+                                position: 'topright',
+                                content: '<div class="input-group">' +
+                                    '   <button class="btn btn-danger btn-sm">Prohibited Users</button>' +
+                                    '   </div>',
+                                classes: '',
+                                style: {
+                                    margin: '5px 20px 20px 0px',
+                                    padding: '0px',
+                                },
+                                events: {
+                                    click: function(data) {
+                                        alert('');
+                                    }
+                                }
+                            })
+                            .addTo(map);
+                        L.control.custom({
+                                position: 'topright',
+                                content: '<div class="input-group">' +
+                                    '   <button class="btn btn-warning btn-sm">Bldg. Height Limit</button>' +
+                                    '   </div>',
+                                classes: '',
+                                style: {
+                                    margin: '5px 20px 20px 0px',
+                                    padding: '0px',
+                                },
+                                events: {
+                                    click: function(data) {
+                                        alert('');
+                                    }
+                                }
+                            })
+                            .addTo(map);
+                        L.control.custom({
+                                position: 'topright',
+                                content: '<div class="input-group">' +
+                                    '   <button class="btn btn-danger btn-sm">Setbacks</button>' +
+                                    '   </div>',
+                                classes: '',
+                                style: {
+                                    margin: '5px 20px 20px 0px',
+                                    padding: '0px',
+                                },
+                                events: {
+                                    click: function(data) {
+                                        alert('');
+                                    }
+                                }
+                            })
+                            .addTo(map);
+                        L.control.custom({
+                                position: 'topright',
+                                content: '<div class="input-group">' +
+                                    '   <button class="btn btn-warning btn-sm">Lot Coverage</button>' +
+                                    '   </div>',
+                                classes: '',
+                                style: {
+                                    margin: '5px 20px 20px 0px',
+                                    padding: '0px',
+                                },
+                                events: {
+                                    click: function(data) {
+                                        alert('');
+                                    }
+                                }
+                            })
+                            .addTo(map);
+                        L.control.custom({
+                                position: 'topright',
+                                content: '<div class="input-group">' +
+                                    '   <button class="btn btn-secondary btn-sm">Graphics</button>' +
+                                    '   </div>',
+                                classes: '',
+                                style: {
+                                    margin: '5px 20px 20px 0px',
+                                    padding: '0px',
+                                },
+                                events: {
+                                    click: function(data) {
+                                        alert('');
+                                    }
+                                }
+                            })
+                            .addTo(map);
+                    },
+                }
+            })
+            moreBtn.addTo(map);
+        }
+        L.ImageOverlay.include({
+            getBounds: function() {
+                return this._bounds;
+            }
+        });
+
+        var map = L.map('map', {
+            zoomControl: true,
+            maxZoom: 28,
+            minZoom: 1
+        }).fitBounds([
+            [25.9101424251, -80.4538632211],
+            [26.0379561899, -80.2078307642]
+        ]);
+        var hash = new L.Hash(map);
+        map.attributionControl.addAttribution('<b>MyZone &#169; 2020</b>');
+        var feature_group = new L.featureGroup([]);
+        var bounds_group = new L.featureGroup([]);
+        var raster_group = new L.LayerGroup([]);
+        var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+             attribution: 'Tiles &copy; Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP'
+        }).addTo(map);
+        <!-- var basemap0 = l.tilelayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { -->
+            <!-- attribution: '<a href="http://openstreetmap.org">openstreetmap</a> contributors', -->
+            <!-- maxzoom: 28 -->
+        <!-- }); -->
+        <!-- basemap0.addto(map); -->
+        // L.control.custom({
+        //         position: 'bottomright',
+        //         content: '<button type="button" class="btn btn-default">' +
+        //             '    <i class="fa fa-crosshairs"></i>' +
+        //             '</button>' +
+        //             '<button type="button" class="btn btn-info">' +
+        //             '    <i class="fa fa-compass"></i>' +
+        //             '</button>' +
+        //             '<button type="button" class="btn btn-primary">' +
+        //             '    <i class="fa fa-spinner fa-pulse fa-fw"></i>' +
+        //             '</button>' +
+        //             '<button type="button" class="btn btn-danger">' +
+        //             '    <i class="fa fa-times"></i>' +
+        //             '</button>' +
+        //             '<button type="button" class="btn btn-success">' +
+        //             '    <i class="fa fa-check"></i>' +
+        //             '</button>' +
+        //             '<button type="button" class="btn btn-warning">' +
+        //             '    <i class="fa fa-exclamation-triangle"></i>' +
+        //             '</button>',
+        //         classes: 'btn-group-vertical btn-group-sm',
+        //         style: {
+        //             margin: '10px',
+        //             padding: '0px 0 0 0',
+        //             cursor: 'pointer'
+        //         },
+        //         datas: {
+        //             'foo': 'bar',
+        //         },
+        //         events: {
+        //             click: function(data) {
+        //                 console.log('wrapper div element clicked');
+        //                 console.log(data);
+        //             },
+        //             dblclick: function(data) {
+        //                 console.log('wrapper div element dblclicked');
+        //                 console.log(data);
+        //             },
+        //             contextmenu: function(data) {
+        //                 console.log('wrapper div element contextmenu');
+        //                 console.log(data);
+        //             },
+        //         }
+        //     })
+        //     .addTo(map);
+
+        // L.control.custom({
+        //         position: 'topleft',
+        //         content: '<div class="input-group">' +
+        //             '    <input type="text" class="form-control input-sm" placeholder="Search">' +
+        //             '    <span class="input-group-btn">' +
+        //             '        <button class="btn btn-default btn-sm" type="button">Go!</button>' +
+        //             '    </span>' +
+        //             '</div>',
+        //         classes: '',
+        //         style: {
+        //             position: 'absolute',
+        //             left: '50px',
+        //             top: '0px',
+        //             width: '200px',
+        //         },
+        //     })
+        //     .addTo(map);
+
+        L.control.custom({
+            position: 'topleft',
+            content: '<div class="input-group">' +
+                '    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Miramar' +
+                '    <span class="caret"></span></button>' +
+                '        <ul class="dropdown-menu"><li><a href="#">Miramar</a></li></ul>' +
+                '</div>',
+            classes: '',
+            style: {
+                position: 'absolute',
+                left: '50px',
+                top: '0px',
+                width: '200px',
+            },
+        }).addTo(map); // aug9 nov25
+        // L.control.custom({
+        //         position: 'bottomleft',
+        //         content: '<div class="panel-body">' +
+        //             '    <div class="progress" style="margin-bottom:0px;">' +
+        //             '        <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="41" ' +
+        //             '             aria-valuemin="0" aria-valuemax="100" style="min-width: 2em; width: 41%">' +
+        //             '            41% Completed' +
+        //             '        </div>' +
+        //             '    </div>' +
+        //             '</div>',
+        //         classes: 'panel panel-default',
+        //         style: {
+        //             width: '200px',
+        //             margin: '20px',
+        //             padding: '0px',
+        //         },
+        //     })
+        //     .addTo(map);
+
+        L.control.custom({
+            position: 'bottomleft',
+            content: '<button class="btn btn-default btn-sm" id="startOver">' +
+                '    <i class="fa fa-arrow-left"></i> Start Over' +
+                '</button>',
+            classes: '',
+            style: {
+                margin: '5px 0px 50px 20px',
+                padding: '0px',
+            },
+        }).addTo(map);
+
+        // $('#changeImg').click(function() {
+        //     $('#demoImage').attr('src', 'http://lorempixel.com/105/105/');
+        // });
+        $('#startOver').click(function() {
+            window.location.href = "/home";
+        });
+
+        function setBounds() {}
+
+        function geoJson2heat(geojson, weight) {
+            return geojson.features.map(function(feature) {
+                return [
+                    feature.geometry.coordinates[1],
+                    feature.geometry.coordinates[0],
+                    feature.properties[weight]
+                ];
+            });
+        }
+
+        function pop_MiramarFutureLandUse0(feature, layer) {
+            layer.on({
+                click: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>USETYPE</strong><br />' + (feature.properties['USETYPE'] !== null ? Autolinker.link(String(feature.properties['USETYPE'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['MAXIMUMDEN'] !== null ? Autolinker.link(String(feature.properties['MAXIMUMDEN'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['JURISDICTI'] !== null ? Autolinker.link(String(feature.properties['JURISDICTI'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ACRES'] !== null ? Autolinker.link(String(feature.properties['ACRES'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_Leng'] !== null ? Autolinker.link(String(feature.properties['Shape_Leng'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_STAr'] !== null ? Autolinker.link(String(feature.properties['Shape_STAr'])) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['Shape_STLe'] !== null ? Autolinker.link(String(feature.properties['Shape_STLe'])) : '') + '</td>\
+                    </tr>\
+                </table>';
+            // layer.bindPopup(popupContent);
+        }
+
+        function style_MiramarFutureLandUse0(feature) {
+            switch (feature.properties['USETYPE']) {
+                case 'CITY AREAS OF PARTICULAR CONCERN':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(95,220,189,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(95,220,189,0.1)',
+                    }
+                    break;
+                case 'COMMERCIAL':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(113,234,47,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(113,234,47,0.1)',
+                    }
+                    break;
+                case 'COMMERCIAL RECREATION':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(202,20,69,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(202,20,69,0.1)',
+                    }
+                    break;
+                case 'CONSERVATION':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(230,98,204,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(230,98,204,0.1)',
+                    }
+                    break;
+                case 'EMPLOYMENT CENTER':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(125,173,236,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(125,173,236,0.1)',
+                    }
+                    break;
+                case 'ESTATE (1 DU/AC)':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(164,30,236,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(164,30,236,0.1)',
+                    }
+                    break;
+                case 'INDUSTRIAL':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(60,174,219,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(60,174,219,0.1)',
+                    }
+                    break;
+                case 'INSTITUTIONAL & PUBLIC FACILITY':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(48,28,233,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(48,28,233,0.1)',
+                    }
+                    break;
+                case 'LOW 2':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(98,220,157,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(98,220,157,0.1)',
+                    }
+                    break;
+                case 'LOW 3':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(202,188,116,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(202,188,116,0.1)',
+                    }
+                    break;
+                case 'LOW 5':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(201,46,43,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(201,46,43,0.1)',
+                    }
+                    break;
+                case 'LOW MEDIUM 10':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(129,144,223,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(129,144,223,0.1)',
+                    }
+                    break;
+                case 'MEDIUM 16':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(29,215,16,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(29,215,16,0.1)',
+                    }
+                    break;
+                case 'MEDIUM HIGH 25':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(209,70,144,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(209,70,144,0.1)',
+                    }
+                    break;
+                case 'OFFICE PARK':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(186,239,95,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(186,239,95,0.1)',
+                    }
+                    break;
+                case 'RECREATION & OPEN SPACE':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(231,165,139,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(231,165,139,0.1)',
+                    }
+                    break;
+                case 'REGIONAL ACTIVITY CENTER':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(34,216,71,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(34,216,71,0.1)',
+                    }
+                    break;
+                case 'RURAL':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(219,141,44,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(219,141,44,0.1)',
+                    }
+                    break;
+                case 'TRANSIT ORIENTED CORRIDOR':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(99,29,212,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(99,29,212,0.1)',
+                    }
+                    break;
+                case 'TRANSPORTATION':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(93,217,219,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(93,217,219,0.1)',
+                    }
+                    break;
+                case 'UTILITIES':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(200,213,76,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(200,213,76,0.1)',
+                    }
+                    break;
+                case '':
+                    return {
+                        pane: 'pane_MiramarFutureLandUse0',
+                        opacity: 1,
+                        color: 'rgba(218,122,226,1.0)',
+                        dashArray: '',
+                        weight: 10,
+                        lineCap: 'butt',
+                        lineJoin: 'miter',
+                        weight: 1.0,
+                        fillOpacity: 1,
+                        fillColor: 'rgba(218,122,226,0.1)',
+                    }
+                    break;
+            }
+        }
+        map.createPane('pane_MiramarFutureLandUse0');
+        map.getPane('pane_MiramarFutureLandUse0').style.zIndex = 600;
+        map.getPane('pane_MiramarFutureLandUse0').style['mix-blend-mode'] = 'normal';
+        var layer_MiramarFutureLandUse0 = new L.geoJson(json_MiramarFutureLandUse0, {
+            pane: 'pane_MiramarFutureLandUse0',
+            onEachFeature: pop_MiramarFutureLandUse0,
+            style: style_MiramarFutureLandUse0
+        });
+        bounds_group.addLayer(layer_MiramarFutureLandUse0);
+        feature_group.addLayer(layer_MiramarFutureLandUse0);
+        raster_group.addTo(map);
+        feature_group.addTo(map);
+        setBounds();
+        // map.addControl(new L.Control.Search({
+        //     layer: feature_group,
+        //     initial: false,
+        //     hideMarkerOnCollapse: true,
+        //     propertyName: 'USETYPE'
+        // }));
+    </script>
+</body>
+
+</html>

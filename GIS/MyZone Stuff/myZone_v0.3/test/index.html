@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.css" />
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-css/1.4.6/select2-bootstrap.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>select2 with pagination</h1>
+            <p>for improved performance with large data sets (20 000 items)</p>
+        </div>
+        <input id="test" style="width:100%;" placeholder="type a number, scroll for more results" />
+    </div>
+    <!--[if lt IE 9]>
+     <script type="text/javascript" src='//ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js'></script>
+    <![endif]-->
+    <!--[if gte IE 9]><!-->
+    <script type="text/javascript" src='http://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+    <!--<![endif]-->
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.15.0/lodash.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/select2/3.5.4/select2.min.js"></script>
+    <script type="text/javascript">
+        // Function to shuffle the demo data
+        function shuffle(str) {
+            return str
+                .split('')
+                .sort(function() {
+                    return 0.5 - Math.random();
+                })
+                .join('');
+        }
+
+        // For demonstration purposes we first make
+        // a huge array of demo data (20 000 items)
+        // HEADS UP; for the _.map function i use underscore (actually lo-dash) here
+        function mockData() {
+            // return _.map(_.range(1, 20000), function(i) {
+            // return {
+            // id: i,
+            // text: shuffle('te ststr ing to shuffle') + ' ' + i,
+            // };
+            // });
+
+            return JSON.parse($.ajax({
+                type: 'GET',
+                url: 'http://localhost:8089/myzone/addresses',
+                dataType: 'json',
+                global: false,
+                async: false,
+                success: function(data) {
+                    return data;
+                }
+            }).responseText);
+        }
+        (function() {
+            // init select 2
+            $('#test').select2({
+                data: mockData(),
+                placeholder: 'search',
+                multiple: true,
+                // query with pagination
+                query: function(q) {
+                    var pageSize,
+                        results,
+                        that = this;
+                    pageSize = 20; // or whatever pagesize
+                    results = [];
+                    if (q.term && q.term !== '') {
+                        var _data = that.data[0]['getmicrozoneaddresses'];
+                        var removeItem = [null]
+                        _data = _.remove(_data, obj => !removeItem.includes(obj.text));
+                        console.log(_data);
+                        // HEADS UP; for the _.filter function i use underscore (actually lo-dash) here
+                        results = _.filter(_data, function(e) {
+
+                            return e.text.indexOf(q.term) >= 0;
+                        });
+                    } else if (q.term === '') {
+                        results = that.data;
+                    }
+                    q.callback({
+                        results: results.slice((q.page - 1) * pageSize, q.page * pageSize),
+                        more: results.length >= q.page * pageSize,
+                    });
+                },
+            });
+        })();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArcGIS Indoors + JavaScript API Example</title>
+<style>
+  #viewDiv {
+    height: 600px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+</style>
+<!-- Load ArcGIS API for JavaScript -->
+<script src="https://js.arcgis.com/4.23/"></script>
+<script>
+  require([
+    "esri/Map",
+    "esri/views/MapView",
+    "esri/layers/FeatureLayer",
+    "esri/tasks/Locator",
+    "esri/tasks/support/RouteParameters",
+    "esri/tasks/support/RouteResult",
+    "esri/tasks/RouteTask",
+    "esri/widgets/Search",
+    "dojo/domReady!"
+  ], function(Map, MapView, FeatureLayer, Locator, RouteParameters, RouteResult, RouteTask, Search) {
+
+    // Define the ArcGIS Online basemap and an indoor map feature layer
+    var map = new Map({
+      basemap: "topo-vector"
+    });
+
+    var view = new MapView({
+      container: "viewDiv",
+      map: map,
+      center: [-118.806574, 34.057101], // Example center coordinates
+      zoom: 17 // Example zoom level
+    });
+
+    // Define the URL to the ArcGIS Indoors feature service
+    var indoorsUrl = "https://services.arcgis.com/..."; // URL to your ArcGIS Indoors feature service
+
+    // Create a feature layer from the ArcGIS Indoors feature service
+    var indoorsLayer = new FeatureLayer({
+      url: indoorsUrl
+    });
+
+    // Add the indoor map feature layer to the map
+    map.add(indoorsLayer);
+
+    // Create a search widget and add it to the view
+    var searchWidget = new Search({
+      view: view
+    });
+    view.ui.add(searchWidget, {
+      position: "top-right"
+    });
+
+    // Handle search results
+    searchWidget.on("select-result", function(event) {
+      var selectedLocation = event.result.feature.geometry;
+
+      // Perform routing
+      var routeTask = new RouteTask({
+        url: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World"
+      });
+
+      var params = new RouteParameters({
+        stops: [selectedLocation], // Add more stops for more complex routing
+        returnDirections: true
+      });
+
+      routeTask.solve(params).then(function(routeResult) {
+        var route = routeResult.routeResults[0].route;
+        console.log("Route length:", route.attributes.Total_Kilometers);
+        console.log("Route duration:", route.attributes.Total_TravelTime);
+      });
+    });
+  });
+</script>
+</head>
+<body>
+  <div id="viewDiv"></div>
+</body>
+</html>

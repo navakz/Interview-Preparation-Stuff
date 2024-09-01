@@ -1,0 +1,160 @@
+esri/Map
+
+esri/views/MapView
+
+esri/views/SceneView
+
+esri/layers/Layer: This module provides a base class for all layers in the ArcGIS API. It includes various layer types such as TileLayer, FeatureLayer, ImageryLayer, etc. [ "esri/layers/ArcGISTiledLayer", "esri/layers/FeatureLayer","esri/layers/MapImageLayer",]
+
+esri/widgets: The widgets module provides various user interface components (widgets) that enhance the functionality of your web map application, such as BasemapToggle, Legend, and Search widgets. [BasemapToggle,Legend,Search,LayerList,ScaleBar,Home,FullScreen] ex. view.ui.add(fullscreen, "top-right");
+
+esri/geometry: This module provides classes and functions for working with geometries (points, lines, polygons, etc.), including spatial analysis and geometry operations. [Point,Polyline,Polygon,Extent,GeometryEngine,Projection]
+
+var bufferedGeometry = GeometryEngine.buffer(point, 1000, "meters");
+
+var bufferedGeometry = geometryEngine.within(point, polygon); 
+
+var projectedPoint = projection.project(point, { wkid: 102100 });
+
+esri/tasks: The tasks module provides access to various GIS operations such as geocoding, routing, and spatial analysis. It allows you to perform these operations on your geographic data.
+
+QueryTask: This class allows you to perform attribute and spatial queries on layers in a map service or feature service.
+require([
+  "esri/tasks/QueryTask",
+  "esri/tasks/support/Query",
+], function(QueryTask, Query) {
+  var queryTask = new QueryTask({
+    url: "https://services.arcgis.com/<service-url>/FeatureServer/0"
+  });
+
+  var query = new Query();
+  query.where = "POPULATION > 1000000";
+  query.outFields = ["CITY_NAME", "POPULATION"];
+
+  queryTask.execute(query)
+    .then(function(result) {
+      // Process query result
+      console.log(result.features);
+    })
+    .catch(function(error) {
+      // Handle error
+      console.error("Query failed: ", error);
+    });
+});
+
+Geoprocessor: This class allows you to execute geoprocessing tasks on ArcGIS Server.
+require([
+  "esri/tasks/Geoprocessor",
+], function(Geoprocessor) {
+  var gp = new Geoprocessor({
+    url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/ESRI_Elevation_World/GPServer/Viewshed"
+  });
+
+  var params = {
+    "Input_Observation_Point": observationPoint,
+    "Viewshed_Distance": 10
+  };
+
+  gp.submitJob(params)
+    .then(function(jobInfo) {
+      return gp.waitForJobCompletion(jobInfo.jobId);
+    })
+    .then(function(result) {
+      // Process geoprocessing result
+      console.log(result);
+    })
+    .catch(function(error) {
+      // Handle error
+      console.error("Geoprocessing failed: ", error);
+    });
+});
+
+RouteTask: This class allows you to find routes and directions between locations
+require([
+  "esri/tasks/RouteTask",
+  "esri/tasks/support/RouteParameters",
+  "esri/tasks/support/FeatureSet"
+], function(RouteTask, RouteParameters, FeatureSet) {
+  var routeTask = new RouteTask({
+    url: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World"
+  });
+
+  var routeParams = new RouteParameters({
+    stops: new FeatureSet({
+      features: [stop1, stop2] // Define your stops as Feature objects
+    }),
+    returnDirections: true
+  });
+
+  routeTask.solve(routeParams)
+    .then(function(data) {
+      // Process route result
+      console.log(data);
+    })
+    .catch(function(error) {
+      // Handle error
+      console.error("Routing failed: ", error);
+    });
+});
+
+
+Locator: This class provides functionality for geocoding and reverse geocoding, converting between addresses and coordinates.
+require([
+  "esri/tasks/Locator"
+], function(Locator) {
+  var locator = new Locator({
+    url: "https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer"
+  });
+
+  var address = {
+    "SingleLine": "380 New York St, Redlands, CA 92373"
+  };
+
+  locator.addressToLocations(address)
+    .then(function(geocodeResults) {
+      // Process geocode results
+      console.log(geocodeResults);
+    })
+    .catch(function(error) {
+      // Handle error
+      console.error("Geocoding failed: ", error);
+    });
+});
+
+
+IdentifyTask: This class allows you to retrieve information about features at a given location on the map.
+require([
+  "esri/tasks/IdentifyTask",
+  "esri/tasks/support/IdentifyParameters"
+], function(IdentifyTask, IdentifyParameters) {
+  var identifyTask = new IdentifyTask({
+    url: "https://services.arcgis.com/<service-url>/MapServer"
+  });
+
+  var identifyParams = new IdentifyParameters({
+    geometry: mapPoint,
+    tolerance: 3,
+    layerIds: [0, 1], // Specify layer IDs to perform identification on
+    returnGeometry: true
+  });
+
+  identifyTask.execute(identifyParams)
+    .then(function(identifyResult) {
+      // Process identify result (e.g., display attributes of identified features)
+      console.log(identifyResult);
+    })
+    .catch(function(error) {
+      // Handle error
+      console.error("Identifying features failed: ", error);
+    });
+});
+
+
+
+
+
+esri/symbols: This module contains classes for defining symbols used to represent geographic features on the map, including point symbols, line symbols, fill symbols, and text symbols. [SimpleMarkerSymbol,SimpleLineSymbol,SimpleFillSymbol,PictureMarkerSymbol] 
+
+esri/renderers: The renderers module allows you to define how features are displayed on the map. It includes classes for creating and customizing renderers based on attributes or other criteria.
+
+esri/Popup: The Popup module provides functionality for displaying information about features when they are clicked on the map. You can customize the content and behavior of popups in your application.

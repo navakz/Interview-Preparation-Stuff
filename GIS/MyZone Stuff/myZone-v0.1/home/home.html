@@ -1,0 +1,71 @@
+<html>
+
+<head>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js" integrity="sha256-LOnFraxKlOhESwdU/dX+K0GArwymUDups0czPWLEg4E=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="data/cities.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/styles-home.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row" style="margin-top: 30px; margin-left:10px">
+            <div>
+                <div class="autocomplete" style="width:300px;">
+                    <input id="myInput" type="text" name="myCountry" placeholder="Where is retail permitted ?.">
+                </div>
+                <input type="submit" id="submitBtn">
+            </div>
+        </div>
+        <div class="row" id="citiesList">
+
+        </div>
+    </div>
+    </div>
+    <script type="text/javascript" src="js/home/autocomplete_fn.js"></script>
+    <script type="text/javascript">
+        var ctsStr = '',
+            countiesArr = [];
+        cities.map((obj) => {
+            if (obj['Place name'] != "") {
+                countiesArr.push(obj['Place name']);
+            }
+            ctsStr += '<div class="col-sm-2 cities"><div class="card">' +
+                '<img class="img-fluid"><div class="card-body"><div class="place">' + obj['Place name'] + '</div>' +
+                '<p class="county">' + obj['County'] + '</p><button class="btn btn-primary mapViewBtn">Map View</button>' +
+                '</div></div></div>';
+        });
+        $("#citiesList").append(ctsStr);
+        /*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
+        autocomplete(document.getElementById("myInput"), countiesArr);
+        $('#submitBtn').click(function() {
+            var place = $('#myInput').val();
+            var index = -1;
+            var filteredObj = cities.find(function(item, i) {
+                if (item['Place name'] === place) {
+                    index = i;
+                    return i;
+                }
+            });
+            $("#citiesList").empty();
+            var ctsStr = "";
+            ctsStr += '<div class="col-sm-2 cities"><div class="card">' +
+                '<img class="img-fluid"><div class="card-body"><div class="place">' + filteredObj['Place name'] + '</div>' +
+                '<p class="county">' + filteredObj['County'] + '</p><button class="btn btn-primary mapViewBtn">Map View</button>' +
+                '</div></div></div>';
+            $("#citiesList").append(ctsStr);
+        });
+
+        $(function() {
+            $(".mapViewBtn").click(function() {
+                window.location.href = "/mapView";
+            });
+        });
+    </script>
+</body>
+
+
+</html>

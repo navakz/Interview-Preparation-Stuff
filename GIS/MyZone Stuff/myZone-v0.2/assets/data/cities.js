@@ -1,0 +1,1 @@
+﻿const cities = getServerData("cities")[0]["miramar_cities"];

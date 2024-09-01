@@ -1,0 +1,108 @@
+
+Programming Skills: Object-oriented and Functional Javascript programming 
+with ES5 & ES6 standard specifications ,Typescript, JQuery, HTML5, CSS3, Boostrap 3 & 4, 
+NodeJS & ExpressJS. 
+GIS Programming Skills: Openlayers 2 & 3 & Leaflet 0.x & 1.x .
+Databases: PostGreSQL 9.x & 10.x & PostGIS 2.x, Sql Server 2019.
+GIS Applications: QGIS 2.x and 3.x, Geoserver 2.x
+
+
+Programming Skills: C,C#.NET & ASP.NET
+GIS Programming Skills: MapTalks, D3, MapBox, ArcGIS Server Java Script API 3.x & 4.x, Arc Objects, Arc GIS desktop.
+Databases: MySQL 5.x.
+GIS Applications: ArcGIS Desktop (ArcMap), ArcSDE, ESRI ArcGIS Server 9.x & 10.x
+
+
+
+Understanding and translating requirements into design for software development.
+Analyze and interpret data to ensure quality and maintain processes relate to geospatial data.
+-- Spatial database design and querying.
+-- Publish and consume web GIS services using Geo Server map server deployment.
+-- Developing Geo-Spatial applications using various data sources.
+Bug Free unit Testing.
+Providing end to end solution with Data Flow Diagrams and Flowcharts at initial and final phases of Application development .
+Maintain application and database accessibility, integrity, and recoverability. 
+Monitor system performance, recommend and participate in performance tuning activities.
+
+
+-- Attend meetings to resolve any issues related to maps, processes and spatial data with
+geo-database.
+-- Work with multiple departments to pursue, manage and deliver projects.
+-- Develop web mapping applications and geo-processing tools to support GIS.
+Understand requirements and develop GIS application to meet business needs.
+Identifying issues and providing resolutions.
+Make documentations of every aspect to clearly understand the GIS application.
+Maintain and support application according to changing business requirements.
+Assist in data integrity and quality assurance activities to ensure application stability.
+Stay current with latest developments in GIS field.
+Ensure that application architecture meets business requirements.
+Design, code and integrate application with database management systems.
+Test applications and perform bug fixes.
+Develop system problem reports and recommendations.
+Propose development initiatives to increase programming efficiency.
+
+
+ 
+ Developed software applications by which the organization can claim them as a proprietary softwares.
+ 
+ - Indoor Routing Application with Impediments and Barriers (SPAX)
+ - Buffer Analytical Application. (PROPERTY DREAMZ)
+ - Network Analytical Application. (PROPERTY DREAMZ)
+ 
+ Also , the above mentioned applications can be used as a service (API or Web Service) for third parties which would be a easier solution to integrate it into their websites/platforms.
+ 
+ Developed from scratch a new process flow for the project by reducing the SLOC(Source Line of Code) of every application developed and the cut down of software by enhancing it to a new technologies which increased the performance and efficiency. 
+ 
+ 
+
+Good in GIS Development and thorough with various Web Mapping API’s and Servers
+Strong front-end web development experience with HTML5, CSS3 and JavaScript libraries like jQuery, Node.js, Express.js.
+Solid knowledge in spatial data creation and management. Spatial analysis and predictive modeling.
+Having good knowledge in Designing, Developing and Deploying GIS solutions that involve integration using database management, geospatial application programming and well published OGC web services (WMS/WFS/WCS) and API’s (REST, SOAP, e.t.c).
+ 
+ 
+ GIS Technical Certifications(Web/Desktop/Mobile/SDE)
+
+
+Explore and learn 3D-View Mapping Libraries.
+
+Explore and learn new frameworks for building native mobile apps in Javascript.
+Enhance my technical skills and get updated with new technologies
+
+
+Three.JS,WebGL,Jquery Mapel,React,Meteor.JS,Vue.JS,AngularJS,MongoDB 
+
+Python ,React Native,Big Data, Digital Marketing
+
+
+
+
+
+interpersonal skills \ team work
+A team player,good listener,highly energetic, willing to extend myself, help others, with a positive attitude.
+Work effectively in a team to develop high quality GIS solutions.
+Participate actively in the design, development, and management of associated RDBMSs.
+Interact regularly with GIS Engineers and GIS Analysts to ensure that web presentation of data is consistent with internal databases and their processes and methods.
+
+oral \ written communication skills
+Consult with Project Managers on system design, functionality and support requirements
+Keep a key contact with product managers regarding support issues, evaluations, enhancements, etc.
+Report problems and enhancement requests to analysts and digitizers.
+
+attendance punctuality
+Attend reviews and meetings on daily basis.
+
+personality traits
+Self-motivated,Team Spirit,Super-passionate about the reach of technology, and when it comes to conquering new frontiers, I will be there in the forefront.
+
+professionalism
+Loyal,trustworthy and respectful
+
+learning and adaptibility
+Learn new technologies and techniques for application development.
+Ability to independently troubleshoot and perform root cause analysis against diverse data environments
+
+leadership qualities
+Take complete responsibility from development to delivery and coordinate with other team members for data input and assessment.
+
+

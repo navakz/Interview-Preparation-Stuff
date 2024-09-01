@@ -1,0 +1,805 @@
+
+        require([
+			"esri/config",
+			"esri/Map",
+			"esri/views/MapView",
+			"esri/views/SceneView",
+			"esri/Graphic",
+			"esri/layers/GraphicsLayer",
+			 "esri/layers/FeatureLayer",
+      "esri/widgets/ScaleBar",
+      "esri/widgets/Legend"
+
+			], function(esriConfig,Map, MapView, SceneView, Graphic, GraphicsLayer,FeatureLayer) {
+
+        esriConfig.apiKey = "YOUR_API_KEY";
+
+        
+		const map = new Map({
+			  basemap: "arcgis/topographic", // basemap styles service
+			  ground: "world-elevation", //Elevation service
+			});
+
+		const view = new SceneView({ // 3D
+		  container: "viewDiv",
+		  map: map,
+		  camera: {
+			position: {
+			  x: -118.808, //Longitude
+			  y: 33.961, //Latitude
+			  z: 2000 //Meters
+			},
+			tilt: 75
+		  }
+		  });
+		  
+		const view = new MapView({ // 2D
+		  map: map,
+		  center: [-118.805, 34.027], // Longitude, latitude
+		  zoom: 13, // Zoom level
+		  container: "viewDiv" // Div element
+		});
+		
+		const graphicsLayer = new GraphicsLayer(); 
+		map.add(graphicsLayer);
+		
+		 const trailheadsLayer = new FeatureLayer({
+			url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trailheads/FeatureServer/0"
+		  });
+
+        map.add(trailheadsLayer);
+        map..addMany();
+		
+        Add trailsLayer to the map with an index of 0. This ensures that the layer is added to the top of the array and is drawn before trailheadsLayer.
+  
+		  const trailsLayer = new FeatureLayer({
+			url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails/FeatureServer/0"
+		  });
+
+		map.add(trailsLayer, 0);
+
+		  const scalebar = new ScaleBar({
+			view: view
+		  });
+
+        view.ui.add(scalebar, "bottom-left");
+	  
+	  
+		  const legend = new Legend ({
+			view: view
+		  });
+		  
+        view.ui.add(legend, "top-right")
+	  
+	  
+	   const webscene = new WebScene({
+        portalItem: {
+          id: "579f97b2f3b94d4a8e48a5f140a6639b"
+        }
+       });
+
+	   const view = new SceneView({
+		container: "viewDiv",
+		map: webscene
+	   });
+	   
+		const search = new Search({
+          view: view
+        });
+        
+		view.ui.add(search, "top-right");
+		
+		search.on("select-result", (event) => {
+          if (!event.result) {
+        });
+		
+		
+		
+		view.on("click", (e) => {
+
+          const params = {
+            location: e.mapPoint,
+            outFields: "*"
+          };
+          const locatorUrl = "https://geocode-api.arcgis.com/arcgis/rest/services/World/GeocodeServer";
+
+          locator
+            .locationToAddress(locatorUrl, params)
+
+            .then(
+              function (response) {
+                // Show the address found
+              function (err) {
+                // Show no address found
+                view.graphics.removeAll();
+                console.log("No address found.");
+              }
+            );
+
+        });
+		
+		function getDemographicData(city, point) {
+
+          // Request demographic data
+          arcgisRest
+            .queryDemographicData({
+              studyAreas: [
+                {
+                  geometry: {
+                    x: point.longitude,
+                    y: point.latitude
+                  }
+                }
+              ],
+              authentication: authentication
+              if (
+                response.results[0].value.FeatureSet.length > 0 &&
+                response.results[0].value.FeatureSet[0].features.length > 0
+              ) {
+                const attributes = response.results[0].value.FeatureSet[0].features[0].attributes;
+                showData(city, attributes, point);
+              } else {
+                console.log("No data found.");
+              }
+            });
+
+        }
+		
+		function showData(city, attributes, point) {
+          if (!city || !attributes || !point) {
+            return;
+          }
+          const title = `Global facts near ${city}`;
+          const content = `Population: ${attributes.TOTPOP}<br>Males: ${attributes.TOTMALES} <br>Females: ${attributes.TOTFEMALES}<br>Average Household Size: ${attributes.AVGHHSZ}`;
+
+          view.openPopup({
+            location: point,
+            title: title,
+            content: content
+          });
+
+        }
+
+
+        "esri/widgets/Sketch",
+        "esri/geometry/geometryEngine"
+			
+			const sketch = new Sketch({
+                view: view,
+                layer: graphicsLayer,
+                updateOnGraphicClick: true,
+                snappingOptions: {
+                    enabled: true,
+                    featureSources: [{
+                        layer: graphicsLayer
+                    }]
+                },
+                visibleElements: {
+                    createTools: {
+                        point: false
+                    },
+                    selectionTools: {
+                        "lasso-selection": false,
+                        "rectangle-selection": false,
+                    },
+                    settingsMenu: false,
+                    undoRedoMenu: false
+                }
+            });
+
+            view.ui.add(sketch, "top-right");
+			
+			 const view = new MapView({
+                map: map,
+                center: [-118.80500, 34.02700], //Longitude, latitude
+                zoom: 13,
+                container: "viewDiv"
+            });
+
+            const relationshipDiv = document.getElementById("relationshipResults");
+            view.ui.add(relationshipDiv, "bottom-right");
+
+            const graphicsLayer = new GraphicsLayer();
+            map.add(graphicsLayer);
+
+            const polyline = {
+                type: "polyline",
+                paths: [
+                    [-13227000.704542402, 4032506.197638312],
+                    [-13223540.698857695, 4034443.92109266],
+                    [-13222135.94452635, 4032506.197638312],
+                    [-13221470.479577951, 4033494.9524006792],
+                    [-13221470.404932415, 4033494.9524006792]
+                ],
+                spatialReference: {
+                    wkid: 102100
+                }
+            };
+            const simpleLineSymbol = {
+                type: "simple-line",
+                width: 2
+            };
+            const polylineGraphic = new Graphic({
+                geometry: polyline,
+                symbol: simpleLineSymbol
+            });
+            graphicsLayer.add(polylineGraphic);
+
+            // Create a polygon geometry
+            const polygon = {
+                type: "polygon",
+                rings: [
+                    [-13228098.704542402, 4035365.9427463487],
+                    [-13226362.225451587, 4035365.9427463487],
+                    [-13226362.225451587, 4032059.2948176656],
+                    [-13228098.704542402, 4032059.2948176656],
+                    [-13228098.704542402, 4035365.9427463487]
+                ],
+                spatialReference: {
+                    wkid: 102100
+                }
+            };
+            const simpleFillSymbol = {
+                type: "simple-fill"
+            };
+            const polygonGraphic = new Graphic({
+                geometry: polygon,
+                symbol: simpleFillSymbol
+            });
+
+            graphicsLayer.add(polygonGraphic);
+			
+			
+			
+			function showSpatialRelationship(string, value) {
+                const element = document.getElementById(string)
+                if (value) {
+                  element.innerHTML =   "<b>" + string + ": " + value + "</b>";
+                } else {
+                 element.innerHTML = string + ": " + value;
+                }
+            }
+			
+			
+			function onGraphicUpdate() {
+
+                let geometry1 = selectedGraphics[0].geometry;
+                let geometry2 = selectedGraphics[1].geometry;
+
+                const contains = geometryEngine.contains(geometry1, geometry2);
+                showSpatialRelationship("Contains", contains)
+
+                const crosses = geometryEngine.crosses(geometry1, geometry2);
+                showSpatialRelationship("Crosses", crosses)
+
+                const disjoint = geometryEngine.disjoint(geometry1, geometry2);
+                showSpatialRelationship("Disjoint", disjoint)
+
+                const equals = geometryEngine.equals(geometry1, geometry2);
+                showSpatialRelationship("Equals", equals)
+
+                const intersects = geometryEngine.intersects(geometry1, geometry2);
+                showSpatialRelationship("Intersects", intersects)
+
+                const overlaps = geometryEngine.overlaps(geometry1, geometry2);
+                showSpatialRelationship("Overlaps", overlaps)
+
+                const touches = geometryEngine.touches(geometry1, geometry2);
+                showSpatialRelationship("Touches", touches)
+
+                const within = geometryEngine.within(geometry1, geometry2);
+                showSpatialRelationship("Within", within)
+
+            }
+			
+			view.ui.add(sketch, "top-right");
+
+            sketch.on(["update", "undo", "redo"], onGraphicUpdate);
+			
+			
+			sketch.on("create", (event) => {
+                if (event.state === "start") {
+                    const arrVal = selectedGraphics.pop();
+                    graphicsLayer.remove(arrVal);
+                }
+                if (event.state === "complete") {
+                    selectedGraphics.unshift(event.graphic);
+
+                    onGraphicUpdate();
+
+                }
+            })
+			
+			
+			
+		
+		const point = { //Create a point
+    type: "point",
+    longitude: -118.80657463861,
+    latitude: 34.0005930608889
+ };
+ const simpleMarkerSymbol = {
+    type: "simple-marker",
+    color: [226, 119, 40],  // Orange
+    outline: {
+        color: [255, 255, 255], // White
+        width: 1
+    }
+ };
+
+ const pointGraphic = new Graphic({
+    geometry: point,
+    symbol: simpleMarkerSymbol
+ });
+ graphicsLayer.add(pointGraphic);
+ 
+ const polyline = {
+    type: "polyline",
+    paths: [
+        [-118.821527826096, 34.0139576938577], //Longitude, latitude
+        [-118.814893761649, 34.0080602407843], //Longitude, latitude
+        [-118.808878330345, 34.0016642996246]  //Longitude, latitude
+    ]
+ };
+ const simpleLineSymbol = {
+    type: "simple-line",
+    color: [226, 119, 40], // Orange
+    width: 2
+ };
+
+ const polylineGraphic = new Graphic({
+    geometry: polyline,
+    symbol: simpleLineSymbol
+ });
+ graphicsLayer.add(polylineGraphic);
+ 
+ const polygon = {
+    type: "polygon",
+    rings: [
+        [-118.818984489994, 34.0137559967283], //Longitude, latitude
+        [-118.806796597377, 34.0215816298725], //Longitude, latitude
+        [-118.791432890735, 34.0163883241613], //Longitude, latitude
+        [-118.79596686535, 34.008564864635],   //Longitude, latitude
+        [-118.808558110679, 34.0035027131376]  //Longitude, latitude
+    ]
+ };
+
+ const simpleFillSymbol = {
+    type: "simple-fill",
+    color: [227, 139, 79, 0.8],  // Orange, opacity 80%
+    outline: {
+        color: [255, 255, 255],
+        width: 1
+    }
+ };
+
+ const polygonGraphic = new Graphic({
+    geometry: polygon,
+    symbol: simpleFillSymbol,
+
+ });
+ graphicsLayer.add(polygonGraphic);
+ 
+  const simpleFillSymbol = {
+    type: "simple-fill",
+    color: [227, 139, 79, 0.8],  // Orange, opacity 80%
+    outline: {
+        color: [255, 255, 255],
+        width: 1
+    }
+ };
+
+ const popupTemplate = {
+    title: "{Name}",
+    content: "{Description}"
+ }
+ const attributes = {
+    Name: "Graphic",
+    Description: "I am a polygon"
+ }
+ 
+ const polygonGraphic = new Graphic({
+    geometry: polygon,
+    symbol: simpleFillSymbol,
+
+    attributes: attributes,
+    popupTemplate: popupTemplate
+
+ });
+ graphicsLayer.add(polygonGraphic);
+ 
+ 
+ 
+ 
+In ArcGIS.com, use the Visualization tab to set the feature styles.
+
+Go back to the item page page > Visualization.
+
+In the left panel, click the Layers and select the Santa Monica parcels layer. In the right panel, click Styles.
+
+Click + Field, and add usetype.
+
+Under Pick a style, click Style options, update Types (unique symbols)
+
+Click on the symbol next to each of the use type values to update the symbol color.
+
+Set each of the usetype values to the following properties:
+
+Fill Color:
+Residental: #ffde3e
+Commercial: #c29ed7
+Industrial: #004c73
+Government: #fc921f
+Institutional: #149ece
+Recreational: #267300
+Miscellaneous: #b7814a
+
+Click the X to exit out of Symbol style.
+
+Click the pencil icon next to symbol style. Set the following properties for all the use types:
+
+Fill transparency: 30%
+Outline color: #ffffff
+Outline transparency: 65%
+Outline width: 1
+Adjust width automatically: false
+
+Click the X to exit out of Symbol style. Then click Done twice.
+
+Click Save to save the style in the feature layer item
+
+
+Import the required libraries.
+Provide an access token.
+Create and publish a portal item.
+Handle the results.
+
+
+    map.on("mousemove", "parcels-fill", e => {
+          map.getCanvas().style.cursor = "pointer"
+          const feature = e.features[0]
+
+          popup
+            .setLngLat(e.lngLat)
+            .setHTML(`<b>Address:</b> ${feature.properties.situsfulla}</br><b>Use type:</b> ${feature.properties.usetype} </br><b>Use Description:</b> ${feature.properties.usedescrip}`)
+            .addTo(map)
+        })
+		
+	const arcgisLayerList = document.querySelector("arcgis-layer-list");
+arcgisLayerList.addEventListener("layerListTriggerAction", async (event) => {
+  // event.detail is used here since the event type is CustomEvent<LayerListTriggerActionEvent>
+  const { action, item } = event.detail;
+  await item.layer.load();
+  if (action.id === "information") {
+    // do something;
+  }
+});
+
+
+const map = document.querySelector("arcgis-map");
+map.addEventListener("arcgisViewChange", (event) => {
+  // event.target provides a reference to the object that dispatched the event
+  // event.target is used here since the event type is CustomEvent<void>
+  // void means that there are no details to show
+  const { zoom } = event.target;
+  console.log(`The zoom is ${zoom}`);
+})
+
+	
+		Nearby Search
+		https://places-api.arcgis.com/arcgis/rest/services/places-service/v1/places/near-point?x=-3.1883&y=55.9533&radius=500&categoryIds=17069&pageSize=1&token=<ACCESS_TOKEN>&f=pjson
+		
+		Bounding box search
+		
+		https://places-api.arcgis.com/arcgis/rest/services/places-service/v1/places/within-extent?xmin=-3.1951975822448735&ymin=55.95079788951077&xmax=-3.180649280548096&ymax=55.95603574810763&categoryIds=17069&pageSize=1&token=<ACCESS_TOKEN>&f=pjson
+		
+		Get place information
+		
+		https://places-api.arcgis.com/arcgis/rest/services/places-service/v1/places/5bbf7493cc5ed5a7f0b8ac78220aa301?requestedFields=all&token=<ACCESS_TOKEN>&f=pjson
+		
+		
+		"esri/geometry/geometryEngine"
+		
+		function resetGraphics() {
+              graphicsLayer.remove(bufferGraphic);
+              resultsLayer.removeAll();
+              bufferGraphic = null;
+            }
+			
+			function findIntersect() {
+
+                resultsLayer.removeAll();
+                if (!bufferGraphic) {
+                  return;
+                }
+
+                const intersectGeom = geometryEngine.intersect(polygonGraphic.geometry, bufferGraphic.geometry);
+
+                const intersectionGraphic = new Graphic({
+                    geometry: intersectGeom,
+                    symbol: {
+                        type: "simple-fill",
+                        style: "cross",
+                        color: "green",
+                        outline: {
+                            color: "green"
+                        }
+                    }
+                });
+                resultsLayer.add(intersectionGraphic);
+
+            }
+
+ function createUnion() {
+
+                resultsLayer.removeAll();
+                if (!bufferGraphic) {
+                  return;
+                }
+
+                const unionGeom = geometryEngine.union(polygonGraphic.geometry, bufferGraphic.geometry);
+
+                const unionGraphic = new Graphic({
+                geometry: unionGeom,
+                symbol: {
+                    type: "simple-fill",
+                    style: "cross",
+                    color: "green",
+                    outline: {
+                    color: "green"
+                    }
+                }
+                });
+                resultsLayer.add(unionGraphic);
+
+            }
+			
+			    "esri/widgets/ScaleBar",
+				
+				const scalebar = new ScaleBar({
+          view: view,
+          unit: "metric"
+        });
+
+        view.ui.add(scalebar, "bottom-right");
+
+        const graphicsLayer = new GraphicsLayer();
+        map.add(graphicsLayer);
+
+        const sketch = new Sketch({
+          layer: graphicsLayer,
+          view: view,
+          availableCreateTools: ["polyline", "polygon", "rectangle"],
+          creationMode: "update",
+          updateOnGraphicClick: true,
+          visibleElements: {
+            createTools: {
+              point: false,
+              circle: false
+            },
+            selectionTools:{
+              "lasso-selection": false,
+              "rectangle-selection":false,
+            },
+            settingsMenu: false,
+            undoRedoMenu: false
+          }
+        });
+		
+		const measurements = document.getElementById("measurements");
+        view.ui.add(measurements, "manual");
+
+        function getArea(polygon) {
+          const geodesicArea = geometryEngine.geodesicArea(polygon, "square-kilometers");
+          const planarArea = geometryEngine.planarArea(polygon, "square-kilometers");
+		  
+		  measurements.innerHTML =
+          "<b>Geodesic area</b>:  " + geodesicArea.toFixed(2) + " km\xB2" + " |   <b>Planar area</b>: " + planarArea.toFixed(2) + "  km\xB2";
+
+        }
+		
+		
+		view.when(() => {
+          sketch.update(polygonGraphic);
+          getArea(polygonGraphic.geometry);
+        });
+		
+		 sketch.on("update", (e) => {
+          const geometry = e.graphics[0].geometry;
+
+          if (e.state === "start") {
+            switchType(geometry);
+          }
+
+          if (e.state === "complete") {
+            graphicsLayer.remove(graphicsLayer.graphics.getItemAt(0));
+            measurements.innerHTML = null;
+          }
+
+          if (
+            e.toolEventInfo &&
+            (e.toolEventInfo.type === "scale-stop" ||
+              e.toolEventInfo.type === "reshape-stop" ||
+              e.toolEventInfo.type === "move-stop")
+          ) {
+            switchType(geometry);
+          }
+
+        });
+		
+		
+		
+		
+<select id="wkid" class="esri-widget esri-select">
+
+      <option value="3857" disabled>Select a projection</option>
+      <optgroup label="Equidistant (maintain length)">
+        <option value="4326" selected>WGS84 (GCS) -> pseudo Plate Carrée (Cylindrical)</option>
+
+      </optgroup>
+
+      <optgroup label="Compromise (distort all)">
+        <option value="3857">Web Mercator Auxiliary Sphere (Cylindrical)</option>
+
+      </optgroup>
+    </select>
+		
+		require([
+
+        "esri/views/MapView",
+        "esri/Map",
+        "esri/request",
+        "esri/geometry/SpatialReference",
+        "esri/Graphic",
+        "esri/geometry/Point",
+        "esri/geometry/Polyline",
+        "esri/layers/GeoJSONLayer",
+        "esri/geometry/geometryEngine",
+        "esri/geometry/projection",
+      ], (
+        MapView,
+        Map,
+        esriRequest,
+        SpatialReference,
+        Graphic,
+        Point,
+        Polyline,
+        GeoJSONLayer,
+        geometryEngine,
+        projection
+      ) => {
+
+      });
+	  
+	  
+	  const pointSym = {
+          type: "simple-marker", // autocasts as new SimpleMarkerSymbol()
+          color: "red",
+          outline: {
+            color: "white",
+            width: 0.5,
+          },
+          size: 5,
+        };
+
+        const projectionBoundary = {
+          symbol: {
+            type: "simple-fill",
+            color: null,
+            outline: {
+              width: 0.5,
+              color: [50, 50, 50, 0.75],
+              style: "dash",
+            },
+          },
+          geometry: {
+            type: "extent",
+            xmin: -180,
+            xmax: 180,
+            ymin: -90,
+            ymax: 90,
+            spatialReference: SpatialReference.WGS84,
+          },
+        };
+		
+		
+		
+		const countriesGeoJson = new GeoJSONLayer({
+          url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/ArcGIS/rest/services/World_Countries_(Generalized)/FeatureServer/0/query?where=1%3D1&outFields=*&f=geojson",
+          copyright: "Esri",
+          spatialReference: {
+            wkid: 4326,
+          },
+          renderer: {
+            type: "simple",
+            symbol: {
+              type: "simple-fill",
+              color: [255, 255, 255, 1],
+              outline: {
+                width: 0.5,
+                color: [100, 70, 170, 0.75],
+              },
+            },
+          },
+        });
+		
+		
+		function getSpatialReference(wkid) {
+          return new SpatialReference({
+            wkid: wkid,
+          });
+        }
+		
+		
+		 const wkidSelect = document.getElementById("wkid");
+        spatialReference = getSpatialReference(wkidSelect.value);
+
+        wkidSelect.addEventListener("change", (event) => {
+          spatialReference = getSpatialReference(event.target.value);
+
+        });
+		
+		
+		<option value="3857" disabled>Select a projection</option>
+      <optgroup label="Equidistant (maintain length)">
+        <option value="4326" selected>WGS84 (GCS) -> pseudo Plate Carrée (Cylindrical)</option>
+
+        <option value="54028">World Cassini (Cylindrical)</option>
+        <option value="54027">World Equidistant conic (Conic)</option>
+
+      </optgroup>
+
+      <optgroup label="Conformal (maintain angles)">
+        <option value="54026">World Stereographic (Azimuthal)</option>
+      </optgroup>
+      <optgroup label="Equal-area (maintain area)">
+        <option value="54010">World Eckert VI (Pseudocylindrical)</option>
+        <option value="54008">World Sinusoidal (Pseudocylindrical)</option>
+      </optgroup>
+      <optgroup label="Gnomonic (distances)">
+        <option value="102034">North Pole Gnomonic (Azimuthal)</option>
+      </optgroup>
+
+      <optgroup label="Compromise (distort all)">
+        <option value="3857">Web Mercator Auxiliary Sphere (Cylindrical)</option>
+
+        <option value="54016">World Gall Stereographic (Cylindrical)</option>
+        <option value="54042">World Winkel Tripel (Pseudoazimuthal)</option>
+        <option value="54050">World Fuller / Dymaxion map (Polyhedral)</option>
+		
+		
+		Create a buffer element that calls the geodesicBuffer method on the point. It will buffer the point with a radius of 1000 kilometers.
+		
+		
+		function bufferPoint(point) {
+          if ([3857, 4326].indexOf(point.spatialReference.wkid) === -1) {
+            point = projection.project(point, getSpatialReference(4326));
+            if (!point) {
+              return;
+            }
+          }
+
+          const buffer = geometryEngine.geodesicBuffer(point, 1000, "kilometers");
+
+        }
+		
+		
+		 const bufferLayer = new GraphicsLayer();
+        const pointLayer = new GraphicsLayer();
+        map.addMany([bufferLayer, pointLayer]);
+		
+		
+		
+		
+		
+ 
+ closure 
+ strict mode in JS
+ ES6 features 
+ Consume REST 
+ ajax url - what are options ??
+ symbol  data type in JS
+ difference between ES5 and ES6
+ in Query task can you do subsets 
+ 
+ 

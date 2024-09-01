@@ -1,0 +1,21 @@
+{
+    "name": "myzone",
+    "version": "1.0.0",
+    "description": "My Zone Web App",
+    "main": "myZone.js",
+    "scripts": {
+        "test": "myZone",
+        "dev": "cross-env NODE_ENV=development nodemon index.js"
+    },
+    "author": "Naveen Kumar Swayamvarpu",
+    "license": "ISC",
+    "dependencies": {
+        "express": "^4.17.1",
+        "express-session": "^1.17.1"
+    },
+    "devDependencies": {
+        "cross-env": "^7.0.2",
+        "morgan": "^1.10.0",
+        "nodemon": "^2.0.4"
+    }
+}

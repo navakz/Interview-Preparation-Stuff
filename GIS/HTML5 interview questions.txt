@@ -1,0 +1,99 @@
+1. Manifest file in HTML5
+
+The manifest file is used to list down resources that can be cached. Browsers use this information to make the web page load faster than the first time. There are 3 sections in the manifest file
+
+CACHE Manifest - Files needs to be cached
+Network - File never to be cached, always need a network connection.
+Fallback - Fallback files in case a page is inaccessible
+
+CACHE MANIFEST
+# 2012-06-16 v1.0.0
+/style.css
+/logo.gif
+/main.js
+NETWORK:
+login.php
+FALLBACK:
+/html/ /offline.html
+
+
+<!DOCTYPE HTML>
+<html manifest="tutorial.appcache">
+...
+...
+</html>
+
+2. New tags in Media Elements in HTML5
+<audio> - Used for sounds, audio streams, or music, embed audio content without any additional plug-in.
+<video> - Used for video streams, embed video content etc.
+<source> - Used for multiple media resources in media elements, such as audio, video, etc.
+<embed> - Used for an external application or embedded content.
+<track> - Used for subtitles in the media elements such as video or audio.
+
+
+3. New input types provided by HTML5 for forms?
+Following are the significant new data types offered by HTML5:
+<form>  
+        <div>
+            <label>Date:</label>
+            <input type="date" id="date" /> // Only select date by using type = "date"
+            <br>
+            <label>Week:</label>
+            <input type="week" id="week" /> // Pick a week by using type = "week"
+            <br>
+            <label>Month:</label>
+            <input type="month" id="month" /> // Only select month by using type = "month"
+            <br>
+            <label>Time:</label>
+            <input type="time" id="time" /> // Only select time by using type = "time".
+            <br>
+            <label>Datetime:</label>
+            <input type="datetime" id="datetime" /> // Combination of date and time by using type = "datetime"
+            <br>
+            <label>Datetime Local:</label>
+            <input type="datetime-local" id="datetime-local" /> // Combination of  date and time by using type = "datetime-local." but ignoring the timezone
+            <br>
+            <label>Color:</label>
+            <input type="color" id="color"/> //Accepts multiple colors using type = "color"
+            <br>
+            <label>Email:</label>
+            <input type="email" id="email" placeholder="email address" /> //Accepts one or more email addresses using type = "email"
+            <br>
+            <label>Number:</label>
+            <input type="number" id="number" /> //Accepts a numerical value with additional checks like min and max using type = "number"
+            <br>
+            <label>Search:</label>
+            <input type="search" id="search" /> //Allows searching queries by inputting text using type = "search"
+            <br>
+            <label>Phone:</label>
+            <input type="tel" id="phone" placeholder="Phone Number" pattern="\d{10}$" /> //Allows different phone numbers by using type = "tel"
+            <br>
+            <label>Range:</label>
+            <input type="range" id="range" /> // Accepts a numerical value within a specific range using type = "range"
+            <br>
+            <label>URL:</label>
+            <input type="url" id="url"/> // Accepts a web address using type = "url”
+        </div>  
+    </form>
+
+HTML5 supports two kinds of graphics:
+
+1. Canvas - It is like drawing on a whitepaper or a blank webpage. We can add different graphic designs on web pages with available methods for drawing various geometrical shapes.
+<!DOCTYPE HTML>
+<html>
+ <head>
+ </head>
+ <body>
+   <canvas width="300" height="100" style="border:2px solid;"></canvas>  
+ </body>
+</html>
+
+2. SVG - Scalable Vector Graphics are used mostly for diagrams or icons. It follows the XML format.
+<!DOCTYPE html>
+<html>
+ <body>
+   <svg width="400" height="110">
+     <rect width="300" height="100" style="fill:#FFF;stroke-width:2;stroke:#000" />
+   </svg>
+ </body>
+</html>

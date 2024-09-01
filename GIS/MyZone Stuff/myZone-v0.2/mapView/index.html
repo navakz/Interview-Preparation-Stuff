@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<!-- Author : Naveen Swayamvarpu -->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <!-- JQUERY CDN -->
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <!-- BOOTSTRAP Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/leaflet.css" />
+    <link rel="stylesheet" href="css/styles-modal.css" />
+    <link rel="stylesheet" type="text/css" href="css/mapweb.css">
+    <link rel="stylesheet" href="css/MarkerCluster.css" />
+    <link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="css/leaflet-search.css" />
+    <link rel="stylesheet" href="css/leaflet.draw.css" />
+    <link rel="stylesheet" href="css/leaflet.measurecontrol.css" />
+
+    <style type="text/css">
+        html,
+        body,
+        #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .customLabel {
+            color: black;
+        }
+        /* .modal {
+            right: -470px;
+        } */
+        
+        .modal-body {
+            height: 150px;
+            overflow-x: auto;
+        }
+        
+        .modal-dialog {
+            width: 400px;
+        }
+        
+        .modal-content {
+            background-color: #3939FF;
+            opacity: 0.9;
+            color: white;
+        }
+        
+        .close {
+            opacity: 1;
+            color: white;
+        }
+        
+        .modal-header {
+            background-color: #0000DC;
+            color: white;
+        }
+        
+        .leaflet-select-control {
+            background: #ffffff;
+            padding: 5px;
+            cursor: pointer;
+        }
+        
+        .leaflet-select-control:active,
+        .leaflet-select-control.active {
+            background: #cccccc;
+        }
+        
+        .leaflet-select-control .icon {
+            width: 15px;
+            height: 15px;
+            display: block;
+            background: url('/images/select.png') no-repeat;
+        }
+    </style>
+    <title></title>
+</head>
+
+<body>
+    <div id="map">
+        <div id="customModal" class="modal fade" data-backdrop="false">
+            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            ×
+                        </button>
+                        <h4 class="modal-title">
+
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="js/leaflet.js"></script>
+<script type="text/javascript" src="js/leaflet-heat.js"></script>
+<script type="text/javascript" src="js/leaflet.rotatedMarker.js"></script>
+<script type="text/javascript" src="js/OSMBuildings-Leaflet.js"></script>
+<script type="text/javascript" src="js/leaflet-hash.js"></script>
+<script type="text/javascript" src="js/Autolinker.min.js"></script>
+<script type="text/javascript" src="js/leaflet.draw.js"></script>
+<script type="text/javascript" src="js/leaflet.measurecontrol.js"></script>
+<script type="text/javascript" src="js/leaflet.markercluster.js"></script>
+<script type="text/javascript" src="js/leaflet-search.js"></script>
+<script type="text/javascript" src="js/Leaflet.Control.Custom.js"></script>
+<script type="text/javascript" src="js/Map.SelectArea.min.js"></script>
+<script type="text/javascript" src="data/fetchData.js"></script>
+<script type="text/javascript" src="data/Miramar.js"></script>
+<script type="text/javascript" src="data/futureLandUse.js"></script>
+<script type="text/javascript" src="data/commercialNindustrialUse.js"></script>
+<script type="text/javascript" src="data/civicNrecreationalUse.js"></script>
+<script type="text/javascript" src="data/zoneDistrictPDR.js"></script>
+<script type="text/javascript" src="data/zoneDistrictPDR_RM.js"></script>
+<script type="text/javascript" src="data/zoneDistrictDef.js"></script>
+<script type="text/javascript" src="data/acessoryUse.js"></script>
+<script>
+    var highlightLayer, selectedZone, moreBtn, labelMarker, boundsArray = [],
+        permittedUsersBtn, prohibitedUsersBtn,
+        buildingHeightLimitBtn, setbacksBtn, lotCoverageBtn,
+        graphicsBtn, accessoryUsesBtn, zoningBtn, futureLandUseBtn, areaSelectedBounds, rectangularArea, layer_Miramar_futureLandUse, layer_Miramar;
+    var zoneBtnLabels = ["permittedUses", "prohibitedUses", "buildingHeightLimit", "setBacks",
+        "lotCoverage", "graphics", "zoning", "futureLandUse", "accessoryUses"
+    ];
+    var featureProperty = '';
+    var prohibitedDataStr, permittedDataStr;
+
+    function retfn(index) {
+        var fn;
+        switch (index) {
+            case 0:
+                fn = permittedUses();
+                break;
+            case 1:
+                fn = prohibitedUses();
+                break;
+            case 2:
+                fn = buildingHeightLimit();
+                break;
+            case 3:
+                fn = setBacks();
+                break;
+            case 4:
+                fn = lotCoverage();
+                break;
+            case 5:
+                fn = graphics();
+                break;
+            case 6:
+                fn = zoning();
+                break;
+            case 7:
+                fn = addFutureLandUseLayer();
+                break;
+            case 8:
+                fn = accessoryUses();
+                break;
+            default:
+                fn = errorLog();
+                break;
+        }
+        return fn;
+
+    }
+
+    function addZoneButtons() {
+        moreBtn = L.control.custom({
+            position: 'topleft',
+            content: '<div class="leaflet-control leaflet-bar leaflet-select-control">' +
+                '   <div class="icon"></div>' +
+                '</div>',
+            classes: '',
+            style: {
+                position: 'absolute',
+                left: '-10px',
+                top: '50px'
+            },
+            events: {
+                click: function() {
+
+
+                },
+            }
+        })
+        moreBtn.addTo(map);
+        zoneBtnLabels.map((e, i) => {
+            var lbls = e + "btn";
+            var lblHdr = e.replace(/([A-Z])/g, ' $1').trim();
+            var btnContent = (i == 0) ?
+                '<button class="btn btn-success btn-sm" data-toggle="modal" data-target="#customModal">' :
+                (i == 1) ?
+                '<button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#customModal">' :
+                (i == 2) ?
+                '<button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#customModal">' :
+                (i == 3) ?
+                '<button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#customModal">' :
+                (i == 4) ?
+                '<button class="btn btn-sm" style="background-color:#FFFFF0" data-toggle="modal" data-target="#customModal">' :
+                (i == 5) ?
+                '<button class="btn btn-sm" style="background-color:#FFD700" data-toggle="modal" data-target="#customModal">' :
+                (i == 6) ?
+                '<button class="btn btn-sm" style="background-color:#E0FFFF" data-toggle="modal" data-target="#customModal">' :
+                (i == 7) ?
+                '<button class="btn btn-sm" style="background-color:#F5DEB3">' :
+                (i == 8) ?
+                '<button class="btn btn-sm" style="background-color:#F4A460" data-toggle="modal" data-target="#customModal">' :
+                '';
+
+
+            lbls = L.control.custom({
+                    position: 'topright',
+                    content: '<div class="input-group">' + btnContent +
+                        lblHdr.charAt(0).toUpperCase() + lblHdr.slice(1) +
+                        '   </button></div>',
+                    classes: '',
+                    style: {
+                        margin: '5px 20px 20px 0px',
+                        padding: '0px',
+                    },
+                    events: {
+                        click: function() {
+                            retfn(i);
+                        }
+                    }
+                })
+                .addTo(map);
+        });
+    }
+    console.log()
+
+    var jsonObjCommercialNIndustrialUse = commercialNindustrialUse[0],
+
+        objKeysCommercialNIndustrialUse = Object.keys(jsonObjCommercialNIndustrialUse).map(k => k = k.trim());
+
+    objKeysCommercialNIndustrialUse = objKeysCommercialNIndustrialUse.slice(3, objKeysCommercialNIndustrialUse.length);
+
+    var jsonObjCivicNRecreationalPrincipleUse = civicNrecreationalUse[0],
+        objKeysCivicNRecreationalPrincipleUse = Object.keys(jsonObjCivicNRecreationalPrincipleUse).map(k => k = k.trim());
+
+    objKeysCivicNRecreationalPrincipleUse = objKeysCivicNRecreationalPrincipleUse.slice(3, objKeysCivicNRecreationalPrincipleUse.length);
+
+    var permittedProhibitedArr = objKeysCommercialNIndustrialUse.concat(objKeysCivicNRecreationalPrincipleUse);
+    console.log(permittedProhibitedArr)
+</script>
+<script type="text/javascript" src="js/mapView/highlightFeature.js"></script>
+<script type="text/javascript" src="js/mapView/layerStyle.js"></script>
+<script>
+    function removeZoneProperties() {
+        if (permittedUsersBtn != undefined) {
+            permittedUsersBtn.remove();
+            prohibitedUsersBtn.remove();
+            buildingHeightLimitBtn.remove();
+            setbacksBtn.remove();
+            lotCoverageBtn.remove();
+            graphicsBtn.remove();
+            accessoryUsesBtn.remove();
+            zoningBtn.remove();
+            futureLandUseBtn.remove();
+        } else {
+
+        }
+    }
+
+    var map = L.map('map', {
+        zoomControl: true,
+        maxZoom: 28,
+        minZoom: 1,
+        selectArea: true
+    }).fitBounds([
+        [25.9101424251, -80.4538632211],
+        [26.0379561899, -80.2078307642]
+    ]);
+    var hash = new L.Hash(map);
+    map.attributionControl.addAttribution('<b>MyZone &#169; 2020</b>');
+    var feature_group = new L.featureGroup([]);
+    // var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    //     attribution: 'Tiles &copy; Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP'
+    // }).addTo(map);
+    var basemap0 = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '<a href="http://openstreetmap.org">openstreetmap</a> contributors',
+        maxzoom: 28
+    }).addTo(map);
+
+    addZoneButtons();
+
+    L.control.custom({
+        position: 'topleft',
+        content: '<div class="input-group">' +
+            '    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Miramar' +
+            '    <span class="caret"></span></button>' +
+            '        <ul class="dropdown-menu"><li><a href="#" onclick="addFGLayer();">Miramar</a></li></ul>' +
+            '</div>',
+        classes: '',
+        style: {
+            position: 'absolute',
+            left: '50px',
+            top: '0px',
+            width: '200px',
+        },
+    }).addTo(map); // aug9 nov25
+
+    L.control.custom({
+        position: 'bottomleft',
+        content: '<button class="btn btn-default btn-sm" id="startOver">' +
+            '    <i class="fa fa-arrow-left"></i> Start Over' +
+            '</button>',
+        classes: '',
+        style: {
+            margin: '5px 0px 50px 20px',
+            padding: '0px',
+        },
+    }).addTo(map);
+
+    $('#startOver').click(function() {
+        window.location.href = "/home";
+    });
+
+    function setBounds() {}
+
+    function geoJson2heat(geojson, weight) {
+        return geojson.features.map(function(feature) {
+            return [
+                feature.geometry.coordinates[1],
+                feature.geometry.coordinates[0],
+                feature.properties[weight]
+            ];
+        });
+    }
+
+    function pop_Miramar(feature, layer) {
+        layer.on({
+            click: highlightFeature,
+        });
+        // labelMarker = L.marker(layer.getBounds().getCenter(), {
+        //     icon: L.divIcon({
+        //         className: 'customLabel',
+        //         html: feature.properties['ZONECODE'],
+        //         iconSize: [100, 40]
+        //     })
+        // }).addTo(map);
+    }
+    map.createPane('pane_Miramar');
+    map.getPane('pane_Miramar').style.zIndex = 600;
+    map.getPane('pane_Miramar').style['mix-blend-mode'] = 'normal';
+    map.createPane('pane_MiramarFutureLandUse');
+    map.getPane('pane_MiramarFutureLandUse').style.zIndex = 1601;
+    map.getPane('pane_MiramarFutureLandUse').style['mix-blend-mode'] = 'normal';
+
+    addFGLayer();
+
+
+    function addFGLayer() {
+        feature_group.removeLayer(layer_Miramar);
+        if (selectedZone != undefined) {
+            selectedZone.remove();
+        } else {}
+        if (rectangularArea != undefined) {
+            map.removeLayer(rectangularArea);
+        } else {}
+        if (labelMarker != undefined) {
+            map.removeLayer(labelMarker);
+        }
+        if (layer_Miramar_futureLandUse != undefined) {
+            feature_group.removeLayer(layer_Miramar_futureLandUse);
+        } else {
+
+        }
+
+        layer_Miramar = new L.geoJson(json_Miramar, {
+            pane: 'pane_Miramar',
+            onEachFeature: pop_Miramar,
+            style: style_Miramar
+        });
+
+        feature_group.addLayer(layer_Miramar);
+
+        feature_group.addTo(map);
+        setBounds();
+
+    }
+    map.selectArea.enable();
+    map.selectArea.setControlKey(true);
+
+    function addFutureLandUseLayer() {
+        feature_group.removeLayer(layer_Miramar);
+        if (selectedZone != undefined) {
+            selectedZone.remove();
+        } else {}
+        if (moreBtn != undefined) {
+            moreBtn.remove();
+        } else {}
+        if (rectangularArea != undefined) {
+            map.removeLayer(rectangularArea);
+        } else {}
+        if (labelMarker != undefined) {
+            map.removeLayer(labelMarker);
+        }
+
+        if (layer_Miramar_futureLandUse != undefined) {
+            feature_group.removeLayer(layer_Miramar_futureLandUse);
+        }
+        layer_Miramar_futureLandUse = new L.geoJson(json_Miramar_futureLandUse, {
+            pane: 'pane_MiramarFutureLandUse',
+            style: style_MiramarFutureLandUse
+        });
+
+        feature_group.addLayer(layer_Miramar_futureLandUse);
+
+        feature_group.addTo(map);
+        setBounds();
+    }
+</script>
+
+<script type="text/javascript" src="js/mapView/areaSelect.js"></script>
+
+
+
+</html>

@@ -1,0 +1,68 @@
+Latest version of ArcGIS : 11.3 - ArcGIS Enterprise
+Latest version of ArcGIS Javascript API : 4.3
+
+-----------------------------------------------------------------------
+
+1. Pooled Service: instance of a service can be shared across multiple application sessions.
+2. Versioning: Allows multiple users to alter the same data in an enterprise/workgroup geodatabase without any locks or duplicating data
+
+3. ArcGIS Server : Common set of software components which is used to manage, host and process GIS / web services.
+4. ArcGIS Server Components:
+   1. Clients
+   2. WebServer - m/c with web serving capabilities (load balancing, clustering)
+   3. GIS Server:
+      1. SOM - window's service which manages requests to SOC
+	  2. SOC - Receives incoming requests from SOM . Processes it and sends back to SOM 
+   4. Data Server - Stores GIS resources.
+   5. Web Adaptor - Used when integrating existing ArcGIS Web Services with enterprise Web Server.
+5. Command: Once clicked doesn't require any further user interaction with the map to complete its function.
+6. Tool: Once clicked it requires user interaction with the map to complete its function.
+7. Coclass : A class which represents objects that can be created directly.
+8. Abstract class : A class which cannot be used to create new objects, but its a specification for sub classes.
+9. IQueryFilter: Provides access to members that filter data based on attribute values or relatoinships.
+10. ISpatialFilter: Provides access to members that return and modify the type of spatial relationship that filter will use.
+11. IFeatureLayer: Provides access to members that control common aspects of feature layer.
+12. ILayer: Provides access to members that work with all the layers.
+13. ArcFM (Facility Management): A utility solution for editing, modelling, maintenance and management of facility information for electric, gas and water.
+14. Desktop Applications : DT Wise PDF creation Tool, DT Attribute Report Generation Tool
+15. Query Task : A task used to query features from server.
+16. FeatureLayer : A map layer where data is downloaded from server to client and displayed on map.
+17. Identify Task: A task used to identify features on map.
+18. Geprocessing : Performs tasks such as range from simple buffers, polygon overlays to complex regression and image classification.
+19. Map Layers : 
+    1. Dynamic Map Service Layer
+	   1.WMSLayer
+	   2.ArcGISDynamicMapServiceLayer
+	   3.ArcGISImageServiceLayer
+	2. Tiled Map Service Layer
+	   1. ArcGISTiledMapServiceLayer
+       2. OpenStreetMapLayer	   
+	3. Graphic Layer
+20. Display Modes: Determines how and when features are brought from server to the client
+    Ex: MODE_SNAPSHOT : for small datasets 
+	    MODE_ONDEMAND : for large datasets
+		MODE_SELECTION: requests only selected features
+21. Geometery Service: Its used to buffer, project and simplify geometry.
+22. Geometeric Network: Set of connected edges and junctions with connectivity rules.
+
+23. FeatureLayer: A FeatureLayer is used to display feature data from a Feature Service or a GeoJSON source. Feature layers are typically used to render large datasets efficiently and support various querying and editing capabilities provided by ArcGIS Server.
+
+24. GraphicsLayer: A GraphicsLayer is used to display graphics or custom geometries directly on the map. Graphics layers are more lightweight compared to feature layers and are suitable for displaying a small number of graphics that may not require complex querying or editing functionalities.
+
+25. ArcGIS Desktop: This is the traditional flagship product of Esri, designed primarily for desktop use. It includes three main applications:
+
+    1. ArcMap: Used for creating and analyzing maps, performing spatial analysis, and managing geographic data.
+    2. ArcCatalog: A data management application for organizing and managing GIS data.
+    3. ArcToolbox: Provides a set of tools for geoprocessing and spatial analysis.
+	
+26. ArcGIS Pro: This is Esri's next-generation desktop GIS application. It is part of the ArcGIS platform and offers a more modern and intuitive interface compared to ArcMap. ArcGIS Pro is designed to support both 2D and 3D mapping, and it integrates seamlessly with other ArcGIS products.
+
+27. ArcGIS Online: This is a cloud-based platform that allows users to create, share, and access maps and geographic information online. It provides tools for data visualization, spatial analysis, and collaboration. ArcGIS Online is particularly useful for organizations that want to share geographic information internally or with the public.
+
+28. ArcGIS Enterprise: Formerly known as ArcGIS Server, ArcGIS Enterprise is an on-premises version of ArcGIS Online. It allows organizations to deploy their own instance of ArcGIS Online behind their firewall, giving them full control over their GIS infrastructure and data.
+
+29. ArcGIS Collector: This is a mobile data collection app that allows users to collect and update GIS data in the field using smartphones or tablets. It integrates with ArcGIS Online or ArcGIS Enterprise, enabling real-time data synchronization and collaboration.
+
+30. ArcGIS Survey123: Another mobile app, Survey123 allows users to create and conduct surveys with geographic information. It's often used for field data collection, asset inventory, and citizen engagement projects.
+
+31. ArcGIS Insights: This is a data analysis and visualization tool that allows users to explore spatial and non-spatial data, perform advanced analytics, and create interactive dashboards and reports.

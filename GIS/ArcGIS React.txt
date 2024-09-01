@@ -1,0 +1,139 @@
+With the current release of 4.3, there are three component packages: map, charts (beta) and coding components.
+
+Map components
+The (@arcgis/map-components) package contains the map component, the scene component, and other components with functionality equivalent to SDK's existing widgets.
+<arcgis-map item-id="05e015c5f0314db9a487a9b46cb37eca"></arcgis-map>
+
+Chart components
+The (@arcgis/charts-components) package contains a series of components that can be used to build charts, provide a complete data visualization story of your data
+The (@arcgis/charts-model) package can be used to ease the creation and updating of that chart's configuration.
+
+----------------------------------------------------------------------------------------------------------------
+import React from "react";
+import ReactDOM from "react-dom/client";
+
+import { ArcgisMap, ArcgisSearch, ArcgisLegend } from "@arcgis/map-components-react";
+
+const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
+root.render(
+  <React.StrictMode>
+    <ArcgisMap
+      item-id="d5dda743788a4b0688fe48f43ae7beb9"
+      center={[-100.4593, 36.9014]}
+      onArcgisViewReadyChange={(event: any) => {
+        console.log('Map View ready', event);
+      }}
+    >
+      <ArcgisSearch position="top-right"></ArcgisSearch>
+      <ArcgisLegend position="bottom-left"></ArcgisLegend>
+    </ArcgisMap>
+  </React.StrictMode>
+);
+
+<arcgis-map
+  item-id="d5dda743788a4b0688fe48f43ae7beb9"
+  [center]="[-100.4593, 36.9014]"
+  (arcgisViewReadyChange)="onArcgisViewReadyChange($event)">
+  <arcgis-expand>
+    <arcgis-search position="top-right"></arcgis-search>
+  </arcgis-expand>
+  <arcgis-legend position="bottom-left"></arcgis-legend>
+</arcgis-map>
+
+
+Layer List
+<body>
+  <arcgis-map id="my-map" item-id="05e015c5f0314db9a487a9b46cb37eca"></arcgis-map>
+  <arcgis-layer-list
+    reference-element="my-map"
+    drag-enabled
+    selection-mode="multiple">
+  </arcgis-layer-list>
+</body>
+
+// Get a reference to the arcgis-layer-list component
+const arcgisLayerList = document.querySelector("arcgis-layer-list");
+// Set properties with various data types
+
+
+// arcgis-map component
+arcgisLayerList.referenceElement = document.querySelector("my-map");
+// boolean
+arcgisLayerList.dragEnabled = true;
+// function
+arcgisLayerList.listItemCreatedFunction = (event) => {
+  const { item } = event;
+  if (item.layer.type != "group") {
+    item.panel = {
+      content: "legend"
+    };
+  }
+};
+// string
+arcgisLayerList.selectionMode = "multiple";
+// object
+arcgisLayerList.visibleElements = {
+  ...arcgisLayerList.visibleElements,
+  ...{
+    statusIndicators: false
+  }
+};
+
+
+Boolean Attributes
+<arcgis-map popupDisabled></arcgis-map>
+
+<arcgis-map item-id="05e015c5f0314db9a487a9b46cb37eca">
+  <arcgis-legend position="bottom-right"></arcgis-legend>
+</arcgis-map>
+
+const arcgisLayerList = document.querySelector("arcgis-layer-list");
+arcgisLayerList.addEventListener("arcgisTriggerAction", async (event) => {
+  // event.detail is used here since the event type is CustomEvent<LayerListTriggerActionEvent>
+  // It returns data passed when initializing the event.
+  // https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent/detail
+  const { action, item } = event.detail;
+  await item.layer.load();
+  if (action.id === "information") {
+    // do something;
+  }
+});
+
+
+const map = document.querySelector("arcgis-map");
+map.addEventListener("arcgisViewChange", (event) => {
+  // event.target provides a reference to the object that dispatched the event
+  // event.target is used here since the event type is CustomEvent<void>
+  // The void means that there are no details provided by the event, itself.
+  const { zoom } = event.target;
+  console.log(`The zoom is ${zoom}`);
+})
+
+
+const map = document.querySelector("arcgis-map");
+map.addEventListener("arcgisViewReadyChange", () => {
+  console.log(`The view is ready`);
+})
+
+
+Mutation observer
+A mutation observer is useful for watching changes that are reflected on the DOM tree.
+const map = document.querySelector("arcgis-map");
+const observer = new MutationObserver((mutations, observer) => {
+  for (let mutation of mutations) {
+    console.log(`Mutation observer: ${mutation.attributeName} changed to ${mutation.target[mutation.attributeName]}`);
+  }
+});
+
+// Start observing the map's attributes for changes, such as the updating property
+observer.observe(map, { attributeFilter: ["updating"] });
+
+// Change the zoom level after 10 seconds
+setTimeout(() => {
+  map.zoom = 7;
+}, "10000");
+
+
+
+
+

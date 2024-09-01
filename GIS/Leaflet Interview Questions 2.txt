@@ -1,0 +1,65 @@
+Technical Skills Assessment:
+1. Can you walk us through your experience with GIS software development, particularly with technologies like Leaflet.js, open layers/mapbox, PostGIS, Geoserver, and QGIS?
+
+2. How do you integrate frontend GIS solutions into a React-based frontend?
+# react-leaflet packagae
+
+3. What is your experience with backend data processing, automation, and analytics within GIS applications?
+#
+1. Backend Data Processing: In GIS applications, backend data processing involves tasks such as fetching, storing, and manipulating geospatial data.This can include processing data from various sources such as GPS devices, satellite imagery, or user inputs. Backend systems often use databases like PostgreSQL with PostGIS extensions or MongoDB for storing and querying geospatial data efficiently.Example: Suppose you have a GIS application that tracks vehicle locations in real-time. The backend system receives GPS data from vehicles, processes it to extract location information, and stores it in a database. This data can then be used for various purposes such as route optimization, geofencing, or generating reports.
+2. Automation: Automation in GIS applications involves automating repetitive tasks or workflows to improve efficiency and reduce manual effort. This can include tasks like data conversion, spatial analysis, or generating map tiles.Example: Let's say you have a GIS application for urban planning that requires updating land parcel boundaries regularly. You can automate the process of updating parcel boundaries by writing scripts or using tools like GDAL (Geospatial Data Abstraction Library) to fetch updated data from authoritative sources, process it, and update the database automatically.
+3. Analytics: Analytics in GIS applications involve extracting insights and patterns from geospatial data to make informed decisions. This can include spatial analysis, data visualization, or predictive modeling.Example: Consider a GIS application for analyzing crime patterns in a city. The backend system can perform spatial analysis to identify crime hotspots, visualize them on a map, and generate statistical reports. Additionally, machine learning algorithms can be used to predict future crime hotspots based on historical data.
+
+4. Can you provide examples of innovative GIS applications you've developed and their impact on the projects you've worked on?
+#
+Propertydreamz a one-stop realty portal facilitates a comprehensive platform for the potential property buyers and investors to take informed investment decisions in choosing best suitable locality. PropertyDreamZ is providing Location-based analysis based on the following liveability indices:
+
+Urban Composition Index
+Risk Zone Index Rating
+Demographic Socio-Economic Knowledge Rating
+Infrastructure Index
+Transportation Index
+Growth Centres Existing
+Naturally Favourable Zones
+Propertydreamz provides all type of real estate solutions for buy, sell, rent, lease in Property, Land, Plot, Flat, Individual house, commercial, villas, group house at Visakhapatnam, Hyderabad, bengaluru, Delhi, Chennai, Mumbai.
+
+
+RaftUp OnFleet, a service based project which detects user’s location in the sea, and reports them with climatic conditions in their area. It also, provides an information of boundary limits through geofences and subgeofences like Shallow, Sunken, Marshy Lands e.t.c. Moreover, it logs the user’s triplogs history.
+
+
+
+
+Problem-Solving and Analytical Skills:
+Describe a challenging problem you encountered while developing a GIS application and how you resolved it.
+How do you approach troubleshooting and enhancing existing GIS applications, tools, and web services?
+Have you ever faced scalability issues with GIS applications? How did you address them?
+#
+Asynchronous processing: Offload time-consuming tasks such as data processing or analytics to background workers or distributed computing systems to free up resources for handling user requests.
+Load balancing: Use load balancers to distribute incoming requests across multiple backend servers to ensure optimal resource utilization and avoid overloading individual servers
+Implement spatial indexing: Use spatial indexing techniques such as R-tree or quadtree to optimize spatial queries and improve database performance.
+Caching: Cache frequently accessed geospatial data and map tiles to reduce database load and improve response times.
+
+Collaboration and Communication:
+How do you engage with development teams and stakeholders to understand requirements for GIS applications?
+Can you describe a situation where you had to communicate technical concepts to non-technical stakeholders?
+How do you ensure effective collaboration within a development team while working on GIS projects?
+
+Development Practices and Methodologies:
+What is your experience with microservices architecture, and how do you apply it in GIS development?
+How familiar are you with modern development practices such as CI/CD and cloud technologies in the context of GIS applications?
+Can you explain your approach to the software development life cycle (SDLC) in the context of GIS application development?
+
+Flexibility and Adaptability:
+How do you approach rapidly prototyping web applications to showcase new concepts and ideas in GIS development?
+Can you describe a time when you had to adapt to changes in project requirements or technology stack during GIS application development?
+
+Teamwork and Attitude:
+How do you demonstrate a "can-do" attitude in your work, particularly when facing challenges in GIS development?
+Can you provide examples of your experience working as part of a team on GIS projects?
+How do you handle disagreements or conflicts within a development team while working on GIS solutions?
+
+
+Schedule and Availability:
+Are you comfortable working the specified schedule (6:30 AM to 3:30 PM IST, Monday to Friday)?
+How do you manage your time effectively to meet project deadlines while working remotely?
+These questions should help assess the candidate's technical expertise, problem-solving abilities, communication skills, adaptability, teamwork, and alignment with the job requirements and schedule.
