@@ -1,0 +1,283 @@
+In Node.js, the cluster module 
+allows you to create multiple processes that share the same server port, 
+helping you take advantage of multi-core systems. 
+-> improving the performance and reliability of Node.js applications, especially those that are CPU-bound or need to handle high traffic.
+// app.js
+const http = require('http');
+const cluster = require('cluster');
+const os = require('os');
+const numCPUs = os.cpus().length;
+
+if (cluster.isMaster) {
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`Worker ${worker.process.pid} died`);
+  });
+} else {
+  // Workers share the TCP connection in this server.
+  http.createServer((req, res) => {
+    res.writeHead(200);
+    res.end('Hello World\n');
+  }).listen(8000);
+}
+--------------------------------------------------------------------------------------------------
+Connection between node js and postgresql
+
+var express = require('express');
+var app = express();
+const { Pool } = require("pg");
+const dbReadPool_Miramar = new Pool({
+    "user": "postgres",
+    "password": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "database": "myzonemiramar"
+});
+start();
+async function start() {
+    await connect();
+}
+async function connect() {
+    try {
+        await dbReadPool_Miramar.connect();
+    } catch (e) {
+        console.error(`Failed to connect ${e}`)
+    }
+}
+async function readMiramarDB(id) {
+    try {
+        const results = await dbReadPool_Miramar.query("select miramar_" + id + "()");
+        return results.rows;
+    } catch (e) {
+        return [];
+    }
+}
+----------------------------------------------------------- MYZONE IN BOUNDING BOXES -----------------------------------======
+var express = require('express');
+var app = express();
+var session = require('express-session');
+var bodyParser = require('body-parser');
+var path = require('path');
+const { Pool } = require("pg");
+app.use(express.json());
+
+const dbReadPool_Miramar = new Pool({
+    "user": "postgres",
+    "password": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "database": "myzonemiramar"
+});
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// viewed at http://localhost:8089
+app.use(express.static(__dirname + '/assets'));
+app.get('/', function(request, response) {
+    response.sendFile(path.join(__dirname + '/login/login.html'));
+});
+app.get("/myzone/miramar/:id", async(req, res) => {
+    const rows = await readMiramarDB(req.params.id);
+    res.setHeader("content-type", "application/json")
+    res.send(rows)
+});
+app.get("/myzone/microzones/:gid", async(req, res) => {
+    const rows = await readMicroZoneDB(req.params.gid);
+    res.setHeader("content-type", "application/json")
+    res.send(rows)
+});
+app.get("/myzone/getfeature/:gid", async(req, res) => {
+    const rows = await getZoneFeature(req.params.gid);
+    res.setHeader("content-type", "application/json")
+    res.send(rows)
+});
+app.get("/myzone/getbboxmicrozones/:x1/:y1/:x2/:y2/:code", async(req, res) => {
+    const rows = await getBBoxMicrozones(req.params.x1, req.params.y1, req.params.x2, req.params.y2, req.params.code);
+    res.setHeader("content-type", "application/json")
+    res.send(rows)
+});
+app.get("/myzone/address", async(req, res) => {
+    const rows = await getMicroZoneAddress();
+    res.setHeader("content-type", "application/json")
+    res.send(rows)
+});
+app.get("/myzone/addresses", async(req, res) => {
+    const rows = await getMicroZoneAddresses();
+    res.setHeader("content-type", "application/json")
+    res.send(rows)
+});
+start();
+async function start() {
+    await connect();
+}
+async function connect() {
+    try {
+        await dbReadPool_Miramar.connect();
+    } catch (e) {
+        console.error(`Failed to connect ${e}`)
+    }
+}
+async function readMiramarDB(id) {
+    try {
+        const results = await dbReadPool_Miramar.query("select miramar_" + id + "()");
+        return results.rows;
+    } catch (e) {
+        return [];
+    }
+}
+async function readMicroZoneDB(id) {
+    try {
+        const results = await dbReadPool_Miramar.query("select getmicrozonecoords(" + id + ")");
+        return results.rows;
+    } catch (e) {
+        return [{ error: e }];
+    }
+}
+async function getBBoxMicrozones(x1, y1, x2, y2, code) {
+    try {
+        const qry = " select ST_AsGeoJSON(bpos.geom)::json, mi.zonecode from browardpos bpos, miramar mi" +
+            " where st_intersects(bpos.geom, ST_MakeEnvelope(" +
+            x1 + "," + y1 + "," + x2 + "," + y2 + ",4326)) and st_intersects(mi.geom,bpos.geom) and mi.zonecode " + code;
+
+        console.log(qry);
+        const results = await dbReadPool_Miramar.query(qry);
+        return results.rows;
+    } catch (e) {
+        return [{ error: e }];
+    }
+}
+async function getZoneFeature(gid) {
+    try {
+        const results = await dbReadPool_Miramar.query("select getzonefeature(" + gid + ")");
+        return results.rows;
+    } catch (e) {
+        return [{ error: e }];
+    }
+}
+async function getMicroZoneAddress() {
+    try {
+        const results = await dbReadPool_Miramar.query("select getmicrozoneaddress()");
+        return results.rows;
+    } catch (e) {
+        return [{ error: e }];
+    }
+}
+async function getMicroZoneAddresses() {
+    try {
+        const results = await dbReadPool_Miramar.query("select getmicrozoneaddresses()");
+        return results.rows;
+    } catch (e) {
+        return [{ error: e }];
+    }
+}
+app.post('/auth', function(request, response) {
+    var username = request.body.username;
+    var password = request.body.password;
+    if (username === 'myzone' && password === 'myzone') {
+        request.session.loggedin = true;
+        request.session.username = username;
+        response.redirect('/home');
+    } else {
+        response.send('Please enter Username and Password!');
+    }
+    response.end();
+});
+app.get('/home', function(request, response) {
+    response.sendFile(path.join(__dirname + '/home/home.html'));
+    // if (request.session.loggedin) {
+    //     //response.send('Welcome back, ' + request.session.username + '!');
+    //     response.sendFile(path.join(__dirname + '/home/home.html'));
+    // } else {
+    //     response.send('Please login to view this page!');
+    // }
+    //response.end();
+});
+app.get('/mapView', function(request, response) {
+    response.sendFile(path.join(__dirname + '/mapView/index.html'));
+    // if (request.session.loggedin) {
+    //     //response.send('Welcome back, ' + request.session.username + '!');
+    //     response.sendFile(path.join(__dirname + '/mapView/index.html'));
+    // } else {
+    //     response.send('Please login to view this page!');
+    // }
+    //response.end();
+});
+app.get('/test', function(request, response) {
+    response.sendFile(path.join(__dirname + '/test/index.html'));
+    // if (request.session.loggedin) {
+    //     //response.send('Welcome back, ' + request.session.username + '!');
+    //     response.sendFile(path.join(__dirname + '/mapView/index.html'));
+    // } else {
+    //     response.send('Please login to view this page!');
+    // }
+    //response.end();
+});
+
+app.listen(8089);
+
+----------------------------------------------------------------- INDOOR SHORTEST ROUTE ----------------------------------------------------
+const NetworkParser = require('geojson-network-parser');
+const express = require('express');
+const app = express();
+const geojsonFloorLines = require('./pathLines.json');
+
+app.listen(3001, function () {
+		console.log('App listening on port 3001!')
+});
+	
+app.use(function(req, res, next) {
+res.header("Access-Control-Allow-Origin", "*");
+res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+next();
+});
+
+app.get('/getRoute', function(req, res) {
+	var sx = req.param('sLat'),
+			sy = req.param('sLng'),
+			dx = req.param('dLat'),
+			dy = req.param('dLng');
+			console.log(sx);
+			console.log(sy);
+			console.log(dx);
+			console.log(dy);
+// Filter the features only process the ones that represent roads
+const roads0 = geojsonFloorLines.features.filter(f => (f.properties.level === 4));
+//console.log(roads);
+// Turn the GeoJSON FeatureCollection of roads into a network that we can find shortest-path routes on
+const network = new NetworkParser(roads0, "cost", 0.5);
+
+const parsed = network.parse({
+ tolerance: 0.00000005,   // Ignore gaps greater than this distance. Units are in degrees latitude, so values < 0.00002 are a good starting point.
+  ignoreCrossings: true  // If `true`, intersections will only be added where there are two nearby points in the original FeatureCollection. If `false`, intersections will be inferred where two edge segments cross each other.
+}); 
+
+var a0 = "83.314454" , a1 = "17.729180" , b0 = "83.314334" , b1 = "17.729081";
+
+// Snap latitude/longitude point to nearest node on the network
+const A = network.getNearestNode([Number(sx),Number(sy)]);
+const B = network.getNearestNode([Number(dx),Number(dy)]);
+
+
+// Get a list of nodes that connect the shortest path between two points
+const route = network.findShortestPath(A, B);
+
+var slevel = 4;
+var geometry = "LineString";
+	        var sendData = {
+	            "id": slevel,
+	            "type": geometry,
+	            "coordinates": route.coordinates
+	        }
+	        res.send(sendData);	
+});
+
+
+

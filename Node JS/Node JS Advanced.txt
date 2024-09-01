@@ -1,0 +1,14 @@
+Cluster - Modules that make child processes run simultaneously with a single parent process.
+
+express-session: Session management module. It saves the data in the key-value form.
+
+Authentication is the process of verifying a user’s identity.
+Authorization is determining what actions can be performed. 
+
+Ex: packages like Passport and JWT to implement authentication and authorization.
+
+File Uploading: Multer - handles multipart/form-data.
+
+Redis - An Open Source store for storing strings, hashes, sets, sorted sets, bitmaps, indexes, and streams.
+
+

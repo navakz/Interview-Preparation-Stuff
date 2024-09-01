@@ -1,0 +1,91 @@
+Lazy loading in Angular is a technique that allows you to load feature modules on demand rather than when the application starts. This helps reduce the initial load time of the application by splitting it into smaller chunks and loading them as needed.
+
+Benefits:
+1. Faster initial loading time.
+2. Improved performance
+3. Better code organization
+4. Reduced memory usage
+5. Improved SEO - By reducing the overall page size and load time, which can improve the page ranking on search engines
+
+Implement Lazy Loading in Angular
+
+Step 1: Create a Feature Module
+
+ng generate module feature --route feature --module app.module
+// Above command automatically configure routes for lazy loading
+
+ng generate component feature/feature
+
+// The --route and --module flags in the command above set up the routing.
+
+
+
+
+app-routing.module.ts:
+
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+
+const routes: Routes = [
+  { path: 'feature', loadChildren: () => import('./feature/feature.module').then(m => m.FeatureModule) },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '**', redirectTo: '/home' }
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+
+
+
+
+
+
+Step 2: Define Routes in the Feature Module
+
+feature-routing.module.ts:
+
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { FeatureComponent } from './feature.component';
+
+const routes: Routes = [
+  { path: '', component: FeatureComponent }
+];
+
+@NgModule({
+  imports: [RouterModule.forChild(routes)],
+  exports: [RouterModule]
+})
+export class FeatureRoutingModule { }
+
+
+
+
+
+
+Step 3: Import and Export FeatureRoutingModule in FeatureModule
+
+feature.module.ts:
+
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FeatureComponent } from './feature.component';
+import { FeatureRoutingModule } from './feature-routing.module';
+
+@NgModule({
+  declarations: [FeatureComponent],
+  imports: [
+    CommonModule,
+    FeatureRoutingModule
+  ]
+})
+export class FeatureModule { }
+
+
+
+
+
+By configuring routes to use the loadChildren property, you can easily set up lazy loading for any module. 

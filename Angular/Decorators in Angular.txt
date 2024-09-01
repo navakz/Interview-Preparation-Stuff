@@ -1,0 +1,140 @@
+In Angular, decorators are a special kind of declaration that can be attached to classes, methods, properties, and parameters. They are used to add metadata and configure these elements in various ways.
+
+1. Class Decorators
+a. @Component: Declares a class as a component and provides metadata about the component.
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-example',
+  templateUrl: './example.component.html',
+  styleUrls: ['./example.component.css']
+})
+export class ExampleComponent {}
+
+b. @Directive: Declares a class as a directive and provides metadata about the directive.
+
+import { Directive } from '@angular/core';
+
+@Directive({
+  selector: '[appExample]'
+})
+export class ExampleDirective {}
+
+c. @Pipe: Declares a class as a pipe and provides metadata about the pipe.
+
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'example'
+})
+export class ExamplePipe implements PipeTransform {
+  transform(value: any, ...args: any[]): any {
+    // transform logic
+  }
+}
+
+d. @NgModule: Declares a class as a module and provides metadata about the module.
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+
+e. @Injectable: Declares a class as a service that can be injected into other classes.
+
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ExampleService {
+  // service logic
+}
+
+2. Property Decorators
+a. @Input: Binds a property of the child component to a value passed from the parent component.
+
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<p>{{ childMessage }}</p>`
+})
+export class ChildComponent {
+  @Input() childMessage: string;
+}
+
+b. @Output: Binds an event of the child component to a callback function in the parent component.
+
+import { Component, EventEmitter, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<button (click)="sendMessage()">Send Message</button>`
+})
+export class ChildComponent {
+  @Output() messageEvent = new EventEmitter<string>();
+
+  sendMessage() {
+    this.messageEvent.emit('Message from child');
+  }
+}
+
+c. @HostBinding: Binds a property of the host element to a property in the directive.
+
+import { Directive, HostBinding } from '@angular/core';
+
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+  @HostBinding('style.backgroundColor') backgroundColor: string;
+
+  @HostListener('mouseenter') onMouseEnter() {
+    this.backgroundColor = 'yellow';
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this.backgroundColor = 'white';
+  }
+}
+
+3. Method Decorators
+a. @HostListener: Subscribes to a DOM event on the host element of the directive.
+
+import { Directive, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appHighlight]'
+})
+export class HighlightDirective {
+  @HostListener('mouseenter') onMouseEnter() {
+    console.log('Mouse entered');
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    console.log('Mouse left');
+  }
+}
+
+4. Parameter Decorators
+@Inject: Specifies a custom provider for a dependency.
+
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+@Component({
+  selector: 'app-dialog',
+  template: `<p>{{ data }}</p>`
+})
+export class DialogComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+}

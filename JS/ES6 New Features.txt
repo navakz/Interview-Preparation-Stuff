@@ -1,0 +1,252 @@
+
+
+ES6 features:
+
+1. Arrow Functions
+Arrow functions provide a shorter syntax for writing functions and automatically bind the this value to the enclosing context.
+
+Syntax:
+
+// Traditional function
+const add = function(a, b) {
+  return a + b;
+};
+
+// Arrow function
+const add = (a, b) => a + b;
+
+
+2. Block-Scoped Variables (let and const)
+let: Declares a block-scoped variable, meaning it is only accessible within the block it is defined.
+const: Declares a block-scoped constant. The value cannot be reassigned.
+
+Syntax:
+
+let count = 10;
+const pi = 3.14159;
+
+
+3. Template Literals
+Template literals allow for easier string interpolation and multi-line strings using backticks (`).
+
+Syntax:
+
+const name = 'John';
+const greeting = `Hello, ${name}!`; // String interpolation
+
+const multiline = `
+  This is a string
+  that spans multiple lines.
+`;
+
+4. Destructuring Assignment
+Destructuring allows for unpacking values from arrays or properties from objects into distinct variables.
+
+Array Destructuring:
+
+const [a, b] = [1, 2];
+console.log(a); // 1
+console.log(b); // 2
+
+Object Destructuring:
+
+const person = { name: 'John', age: 30 };
+const { name, age } = person;
+console.log(name); // John
+console.log(age); // 30
+
+
+5. Default Parameters
+Functions can have default values for parameters, which are used if no argument is provided.
+
+Syntax:
+
+function greet(name = 'Guest') {
+  return `Hello, ${name}!`;
+}
+
+console.log(greet()); // Hello, Guest!
+console.log(greet('John')); // Hello, John!
+
+6. Rest and Spread Operators
+- Rest Operator: Collects all remaining elements into an array.
+- Spread Operator: Expands an array or object into individual elements.
+
+Rest Syntax:
+
+function sum(...numbers) {
+  return numbers.reduce((acc, curr) => acc + curr, 0);
+}
+console.log(sum(1, 2, 3)); // 6
+
+Spread Syntax:
+
+const arr = [1, 2, 3];
+const newArr = [...arr, 4, 5]; // [1, 2, 3, 4, 5]
+
+const obj = { a: 1, b: 2 };
+const newObj = { ...obj, c: 3 }; // { a: 1, b: 2, c: 3 }
+
+
+7. Classes
+ES6 introduced a more familiar syntax for creating objects and dealing with inheritance using the class keyword.
+
+Syntax:
+
+class Person {
+  constructor(name, age) {
+    this.name = name;
+    this.age = age;
+  }
+
+  greet() {
+    return `Hello, my name is ${this.name} and I am ${this.age} years old.`;
+  }
+}
+
+const john = new Person('John', 30);
+console.log(john.greet()); // Hello, my name is John and I am 30 years old.
+
+
+8. Modules
+ES6 introduced a native module system in JavaScript, allowing developers to export and import code between files.
+
+Exporting:
+
+// math.js
+export function add(a, b) {
+  return a + b;
+}
+
+export const pi = 3.14159;
+
+Importing:
+
+// app.js
+import { add, pi } from './math';
+console.log(add(2, 3)); // 5
+console.log(pi); // 3.14159
+
+
+9. Promises
+Promises simplify working with asynchronous code by providing a way to handle success and failure cases.
+
+Syntax:
+
+const myPromise = new Promise((resolve, reject) => {
+  // Simulating an async operation
+  setTimeout(() => {
+    resolve('Success!');
+  }, 1000);
+});
+
+myPromise
+  .then(result => console.log(result)) // Success!
+  .catch(error => console.log(error));
+
+10. Symbol
+Symbols are a new primitive data type in ES6. They are unique and immutable, often used as object property keys to avoid name collisions.
+
+Syntax:
+
+const sym1 = Symbol('description');
+const sym2 = Symbol('description');
+
+console.log(sym1 === sym2); // false
+
+const obj = {
+  [sym1]: 'value'
+};
+console.log(obj[sym1]); // value
+
+11. Iterators and Generators
+Iterators: Objects that enable custom iteration over data structures.
+Generators: Functions that can be paused and resumed, allowing you to work with iterators more easily.
+Generator Function:
+
+
+function* count() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+const counter = count();
+
+console.log(counter.next().value); // 1
+console.log(counter.next().value); // 2
+console.log(counter.next().value); // 3
+
+12. Map and Set
+Map: A collection of key-value pairs where keys can be of any data type.
+Set: A collection of unique values.
+Map Example:
+
+const map = new Map();
+map.set('name', 'John');
+map.set('age', 30);
+
+console.log(map.get('name')); // John
+console.log(map.size); // 2
+
+Set Example:
+
+const set = new Set([1, 2, 3, 3]);
+console.log(set.size); // 3 (duplicate values are ignored)
+
+set.add(4);
+console.log(set.has(4)); // true
+
+13. WeakMap and WeakSet
+WeakMap: Similar to Map but only allows objects as keys, and does not prevent garbage collection of key objects.
+WeakSet: Similar to Set but only allows objects as values, and does not prevent garbage collection of values.
+
+WeakMap Example:
+
+const wm = new WeakMap();
+let obj = {};
+wm.set(obj, 'value');
+console.log(wm.get(obj)); // value
+
+obj = null; // Now the object can be garbage collected
+WeakSet Example:
+
+const ws = new WeakSet();
+let obj = {};
+ws.add(obj);
+console.log(ws.has(obj)); // true
+
+obj = null; // Now the object can be garbage collected
+
+14. Enhanced Object Literals
+ES6 introduced shorthand syntax for object properties and methods, making object literals more concise.
+
+Syntax:
+
+const name = 'John';
+const age = 30;
+
+const person = {
+  name,
+  age,
+  greet() {
+    return `Hello, my name is ${this.name}.`;
+  }
+};
+
+console.log(person.greet()); // Hello, my name is John.
+
+15. Default Imports and Exports
+You can export a single value as the default export and import it without using curly braces.
+
+Default Export:
+
+// math.js
+export default function add(a, b) {
+  return a + b;
+}
+Default Import:
+
+// app.js
+import add from './math';
+console.log(add(2, 3)); // 5

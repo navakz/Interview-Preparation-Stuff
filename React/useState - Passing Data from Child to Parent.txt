@@ -1,0 +1,67 @@
+// src/App.js
+import React from 'react';
+import Parent from './Parent';
+
+function App() {
+  return (
+    <div>
+      <Parent />
+    </div>
+  );
+}
+
+export default App;
+
+// src/Parent.js
+import React, { useState } from 'react';
+import Child from './Child';
+
+function Parent() {
+  const [message, setMessage] = useState('');
+
+  const handleMessage = (msg) => {
+    setMessage(msg);
+  };
+
+  return (
+    <div>
+      <h1>Parent Component</h1>
+      <p>Message from Child: {message}</p>
+      <Child onMessage={handleMessage} />
+    </div>
+  );
+}
+
+export default Parent;
+
+// src/Child.js
+import React, { useState } from 'react';
+
+function Child({ onMessage }) {
+  const [inputValue, setInputValue] = useState('');
+
+  const handleChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleClick = () => {
+    onMessage(inputValue);
+  };
+
+  return (
+    <div>
+      <h2>Child Component</h2>
+      <input type="text" value={inputValue} onChange={handleChange} />
+      <button onClick={handleClick}>Send to Parent</button>
+    </div>
+  );
+}
+
+export default Child;
+
+
+In this example:
+
+- The App component renders the Parent component.
+- The Parent component renders the Child component and passes down the handleMessage function.
+- The Child component uses this function to send its state (inputValue) back to the parent when the button is clicked.

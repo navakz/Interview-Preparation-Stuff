@@ -1,0 +1,186 @@
+Basic String Manipulation Questions
+
+1. Reverse a String
+Question: Write a function to reverse a string.
+Example: "hello" → "olleh"
+Check Palindrome
+
+function reverseString(s: string): string {
+  return s.split('').reverse().join('');
+}
+
+// Example usage
+console.log(reverseString("hello")); // Output: "olleh"
+
+function isPalindrome(s: string): boolean {
+  const reversed = s.split('').reverse().join('');
+  return s === reversed;
+}
+
+// Example usage
+console.log(isPalindrome("racecar")); // Output: true
+console.log(isPalindrome("hello"));   // Output: false
+---------------------------------------------------------------------------------------------------
+Question: Count the number of vowels in a given string.
+Example: "hello" → 2 (e, o)
+
+function countVowels(s: string): number {
+  const vowels = new Set(['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']);
+  let count = 0;
+
+  for (let char of s) {
+    if (vowels.has(char)) {
+      count++;
+    }
+  }
+
+  return count;
+}
+
+// Example usage
+console.log(countVowels("hello")); // Output: 2 (e, o)
+console.log(countVowels("programming")); // Output: 3 (o, a, i)
+----------------------------------------------------------------------------------------------
+
+Question: Remove duplicate characters from a string.
+Example: "aabbcc" → "abc"
+
+function removeDuplicates(s: string): string {
+  const seen = new Set<string>();
+  let result = '';
+
+  for (const char of s) {
+    if (!seen.has(char)) {
+      seen.add(char);
+      result += char;
+    }
+  }
+
+  return result;
+}
+
+// Example usage
+console.log(removeDuplicates("aabbcc")); // Output: "abc"
+console.log(removeDuplicates("programming")); // Output: "progamin"
+
+
+
+-----------------------------------------------------------------------------------------
+Question: Check if two strings are anagrams of each other (contain the same characters with the same frequencies).
+Example: "listen" and "silent"
+
+# function areAnagrams(s1: string, s2: string): boolean {
+  // Check if lengths are different
+  if (s1.length !== s2.length) return false;
+
+  // Sort both strings and compare
+  const sortedS1 = s1.split('').sort().join('');
+  const sortedS2 = s2.split('').sort().join('');
+
+  return sortedS1 === sortedS2;
+}
+
+// Example usage
+console.log(areAnagrams("listen", "silent")); // Output: true
+console.log(areAnagrams("hello", "world"));   // Output: false
+
+
+-----------------------------------------------------------------------------------------
+Question: Find the longest common prefix string among an array of strings.
+Example: ["flower", "flow", "flight"] → "fl"
+-----------------------------------------------------------------------------------------
+Question: Compress a string using counts of repeated characters. If compressed string is not shorter, return the original string.
+Example: "aabcccccaaa" → "a2b1c5a3"
+function compressString(s: string): string {
+  if (s.length === 0) return "";
+
+  let compressed = '';
+  let count = 1;
+
+  for (let i = 1; i < s.length; i++) {
+    if (s[i] === s[i - 1]) {
+      count++;
+    } else {
+      compressed += s[i - 1] + count;
+      count = 1;
+    }
+  }
+
+  // Append the last group
+  compressed += s[s.length - 1] + count;
+
+  // Return the original string if compressed version is not shorter
+  return compressed.length < s.length ? compressed : s;
+}
+
+// Example usage
+console.log(compressString("aabcccccaaa")); // Output: "a2b1c5a3"
+console.log(compressString("abc"));          // Output: "abc"
+
+-----------------------------------------------------------------------------------------
+Question: Given two strings, determine if one is a permutation of the other.
+Example: "abc" and "bca"
+-----------------------------------------------------------------------------------------
+Question: Reverse the order of words in a given string.
+Example: "the sky is blue" → "blue is sky the"
+
+function reverseWords(s: string): string {
+  return s.split(' ').reverse().join(' ');
+}
+
+// Example usage
+console.log(reverseWords("the sky is blue")); // Output: "blue is sky the"
+
+-----------------------------------------------------------------------------------------
+Question: Find the length of the longest substring without repeating characters.
+Example: "abcabcbb" → 3 ("abc")
+
+function lengthOfLongestSubstring(s: string): number {
+  let maxLength = 0;
+
+  for (let i = 0; i < s.length; i++) {
+    const seen = new Set<string>();
+    for (let j = i; j < s.length; j++) {
+      if (seen.has(s[j])) {
+        break;
+      }
+      seen.add(s[j]);
+      maxLength = Math.max(maxLength, j - i + 1);
+    }
+  }
+
+  return maxLength;
+}
+
+// Example usage
+console.log(lengthOfLongestSubstring("abcabcbb")); // Output: 3 ("abc")
+console.log(lengthOfLongestSubstring("bbbbb"));    // Output: 1 ("b")
+console.log(lengthOfLongestSubstring("pwwkew"));   // Output: 3 ("wke")
+
+-----------------------------------------------------------------------------------------
+Question: Find the longest palindromic substring in a given string.
+Example: "babad" → "bab" or "aba"
+-----------------------------------------------------------------------------------------
+Question: Given two strings s and t, find the minimum window in s which will contain all the characters in t.
+Example: "ADOBECODEBANC" and "ABC" → "BANC"
+-----------------------------------------------------------------------------------------
+Question: Implement the atoi function that converts a string to an integer.
+Example: "42" → 42, " -42" → -42
+-----------------------------------------------------------------------------------------
+Question: Given two strings s and p, find all the start indices of p's anagrams in s.
+Example: "cbaebabacd" and "abc" → [0, 6]
+-----------------------------------------------------------------------------------------
+Question: Find the minimum number of operations required to convert one string to another. Operations include insertions, deletions, and substitutions.
+Example: "horse" and "ros" → 3
+-----------------------------------------------------------------------------------------
+Question: Generate the n-th term of the count-and-say sequence.
+Example: For n = 4, the output is "1211"
+-----------------------------------------------------------------------------------------
+Question: Check if one string is a rotation of another.
+Example: "waterbottle" and "erbottlewat"
+-----------------------------------------------------------------------------------------
+Question: Find the longest substring that appears more than once in the string.
+Example: "banana" → "ana"
+-----------------------------------------------------------------------------------------
+Question: Given a string, partition it into as few palindromes as possible. Return all possible palindrome partitions.
+Example: "aab" → [["a", "a", "b"], ["aa", "b"]]

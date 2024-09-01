@@ -1,0 +1,101 @@
+Lazy loading in React allows you to load components only when they are needed, rather than including them in the initial bundle. 
+
+- Basic Lazy Loading
+
+Use "lazy" to dynamically import components and "Suspense" to handle loading states.
+
+// App.js
+import React, { Suspense, lazy } from 'react';
+
+// Lazy load the component
+const MyComponent = lazy(() => import('./MyComponent'));
+
+function App() {
+  return (
+    <div>
+      <h1>My App</h1>
+      <Suspense fallback={<div>Loading...</div>}>
+        <MyComponent />
+      </Suspense>
+    </div>
+  );
+}
+
+export default App;
+
+- Lazy Loading with Dynamic Imports
+
+// App.js
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+
+// Lazy load route components
+const Home = lazy(() => import('./Home'));
+const About = lazy(() => import('./About'));
+
+function App() {
+  return (
+    <Router>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+        </Routes>
+      </Suspense>
+    </Router>
+  );
+}
+
+export default App;
+
+
+- Error Handling
+You might want to handle errors if a component fails to load. You can use a combination of "ErrorBoundary" and lazy loading for this purpose.
+
+// ErrorBoundary.js
+import React, { Component } from 'react';
+
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, info) {
+    console.error('Error loading component:', error, info);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return <div>Something went wrong.</div>;
+    }
+
+    return this.props.children;
+  }
+}
+
+export default ErrorBoundary;
+
+
+// App.js
+import React, { Suspense, lazy } from 'react';
+import ErrorBoundary from './ErrorBoundary';
+
+const MyComponent = lazy(() => import('./MyComponent'));
+
+function App() {
+  return (
+    <ErrorBoundary>
+      <Suspense fallback={<div>Loading...</div>}>
+        <MyComponent />
+      </Suspense>
+    </ErrorBoundary>
+  );
+}
+
+export default App;
+

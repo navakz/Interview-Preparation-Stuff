@@ -1,0 +1,148 @@
+React is a JavaScript library for building user interfaces, particularly single-page applications where you can create reusable UI components.
+
+What are the main features of React?
+
+JSX, Virtual DOM, Components, One-way data binding, High performance.
+What is JSX?
+
+JSX stands for JavaScript XML. It allows you to write HTML in React, making the code easier to write and understand.
+Explain the Virtual DOM.
+
+The Virtual DOM is a lightweight representation of the actual DOM. React uses it to optimize updates, by only rendering components that have actually changed.
+What is the difference between a Class Component and a Functional Component?
+
+Class Components are ES6 classes and can hold and manage state using this.state and lifecycle methods. Functional Components are simpler and use hooks like useState and useEffect for state and side effects.
+Intermediate Questions
+What are props in React?
+
+Props are short for properties. They are read-only attributes passed to components from parent components, used to pass data and event handlers.
+What is state in React?
+
+State is a built-in object that holds property values that belong to a component. State is mutable and can change over time, often as a result of user actions.
+What are React Hooks?
+
+Hooks are functions that let you use state and other React features in functional components. Examples include useState, useEffect, useContext, and useReducer.
+What is the use of useEffect Hook?
+
+useEffect is a hook that lets you perform side effects in function components. It replaces lifecycle methods like componentDidMount, componentDidUpdate, and componentWillUnmount.
+What is Context API?
+
+Context API is a way to create global variables that can be passed around in a React app, avoiding the need for prop drilling. It is used for managing global state.
+Advanced Questions
+What are Higher-Order Components (HOC)?
+
+HOCs are functions that take a component and return a new component. They are used for reusing component logic, such as connecting to a Redux store.
+What is Redux?
+
+Redux is a state management library for JavaScript apps. It helps manage the application state in a predictable way using actions, reducers, and stores.
+How do you optimize performance in a React application?
+
+Use React.memo, PureComponent, shouldComponentUpdate, lazy loading, code splitting, and optimizing rendering with keys and avoiding unnecessary re-renders.
+What is the purpose of useMemo and useCallback hooks?
+
+useMemo is used to memoize expensive calculations so they are only recomputed when necessary. useCallback is used to memoize functions to prevent unnecessary re-renders when the functions are passed as props.
+Explain the reconciliation process in React.
+
+Reconciliation is the process React uses to update the DOM. It compares the Virtual DOM with the actual DOM and only updates the changed parts.
+Practical Questions
+How do you handle forms in React?
+
+Use controlled components with state management, or uncontrolled components with refs. Handle form submissions with event handlers.
+What are keys in React, and why are they important?
+
+Keys are unique identifiers for elements. They help React identify which items have changed, are added, or are removed, optimizing the rendering process.
+How do you fetch data in a React application?
+
+Use fetch API or libraries like Axios inside lifecycle methods (componentDidMount for class components) or hooks like useEffect for functional components.
+What is Prop Drilling and how do you avoid it?
+
+Prop Drilling is passing props through many levels of components. It can be avoided using Context API or state management libraries like Redux.
+How do you handle side effects in React?
+
+Use the useEffect hook for handling side effects in functional components or lifecycle methods like componentDidMount and componentDidUpdate in class components.
+
+
+The useContext hook in React is a powerful tool that allows you to access and share state across multiple components without having to pass props down manually at every level of the component tree.
+
+
+
+Tell me something about yourself.
+She asked me to write code from the front end that how I can handle the API request from an API endpoint.
+She asked what is lazy-loading and code splitting.
+She asked how to debounce the application.
+How the data flow in the components.
+She asked me to open the code sandbox and told me to code a simple component and render a component to that component. The question is straightforward I have done with this task in 5 ~ 6 mins.
+Later she asked me to call the API endpoint using “fetch” or “Axios” from the second component to the first component which is rendered in the app component. I used functional hooks like useEffect and useState.
+After that, she tested my knowledge and understanding of class components and components life cycle methods like componentDidMount() & componentWillUnmount().
+Later she asked how to use componentWillUnmount() in the functional component I answered that we use useEffect() hook to clean up the subscriptions and timers in the useEffect function simply return ()=> { cleanup }. to avoid memory leaks.
+
+
+
+1. What is one of the core types in React?
+A Component is one of the core building blocks of React. React allows us to pass information to components using things called props (short for properties). Because React comprises several components, props make it possible to share the same data across the components that need them.
+
+2. What do you mean by the state?
+The state is an instance of React Component Class can be defined as an object of a set of observable properties that control the behavior of the component. In other words, the State of a component is an object that holds some information that may change over the lifetime of the component.
+
+3. What is redux?
+Redux is a knowable state container built for JavaScript apps. It allows managing the application state, and it stands to be open source. Applications that run consistently help run in different environments (client, server, and native) and are easy to test.
+
+4. Is it possible to display props on a parent component?
+First pass the data from the child to the parent, as an argument into a callback from the parent. Set this incoming parameter as a state on the parent component, and then pass it as a prop to the other child (see above example). The sibling can then use the data as a prop.
+
+5. In ReactJS, why there is a need to capitalize on the components?
+Capitalized types indicate that the JSX tag is referring to a React component. These tags get compiled into a direct reference to the named variable, so if you use the JSX Foo/ expression, Foo must be in scope.
+
+6. What do you know about synthetic events?
+Synthetic events are the wrapper that React uses to standardize event functionality across browsers. It is important to remember that events are not part of core Java script. Instead, they come from each browser’s own Java script API — meaning that how browsers handle events will differ.
+
+7. Explain DOM diffing?
+Once React knows which virtual DOM objects have changed, then React updates only those objects, in the real DOM. This makes the performance far better when compared to manipulating the real DOM directly. This makes React standout as a high performance JavaScript library.
+
+8. Is it possible to nest JSX elements into other JSX elements?
+It is possible to nest JSX elements. The process is quite similar to that of nesting the HTML elements. However, there are certain things that are different in this. You must be familiar with the source and destination elements to perform this task simply.
+
+9. List some of the major advantages of React.
+Easy to Learn, Easy to Use.
+Reusable Components, Great Developer Tools.
+The Virtual DOM, the Ecosystem.
+It’s Easier to Write with JSX.
+
+
+10. What are the limitations of React?
+React Technology accelerates so fast so that it cannot make proper documentation of the project. So, the developer tries to write the instruction on its own. React focus on the view part of MVC i.e. UI of the web application.
+
+11. What is JSX?
+JSX is an XML/HTML-like syntax used by React that extends ECMA Script so that XML/HTML-like text can co-exist with JavaScript/React code. JSX allows us to put HTML into JavaScript.
+
+12. What do you understand by Virtual DOM? Explain its working.
+The virtual DOM (VDOM) is a programming concept where an ideal, or “virtual”, representation of a UI is kept in memory and synced with the “real” DOM by a library such as React DOM. Since “virtual DOM” is more of a pattern than a specific technology, people sometimes say it to mean different things.
+
+13. Why can’t browsers read JSX?
+Browsers cannot read JSX because there is no inherent implementation for the browser engines to read and understand it. You can use label to transform your JSX into native JavaScript and HTML which browser can understand.
+
+14. How is React different from Angular?
+Angular JS is a structural framework for developing dynamic web apps, whereas React is a JavaScript library that allows you to build UI components. Angular JS is based on MVC (Model View Controller) whereas React is based on Virtual DOM. Angular is based on Typescript and React is based on JavaScript.
+
+15. What do you understand from “In React, everything is a component.”
+Components are the building blocks of a React application’s UI. These components split up the entire UI into small independent and reusable pieces. Then it renders each of these components independent of each other without affecting the rest of the UI
+
+16. Explain the purpose of render() in React.
+render() function is used to update the UI. For this, you have to create a new element and send it to React DOM. render() controls the content of the container node you pass and if there is any DOM element already present in it then it would be replaced when first called.
+
+17. What is a state in React and how is it used?
+The state is an instance of React Component Class can be defined as an object of a set of observable properties that control the behavior of the component. JS import React, { Component} from ‘react’; class Example extends Component { constructor(props) { super(props); } render() { return ( … ) } } Adding our state object is easy enough. Inside the constructor, after super(props); , just add this. state and set it equal to an empty object.
+
+18. What are the different phases of React component’s lifecycle?
+A React Component can go through four stages of its life as follows.
+Initialization: This is the stage where the component is constructed with the given Props and default state. This is done in the constructor of a Component Class.
+Mounting: Mounting is the stage of rendering the JSX returned by the render method itself.
+Updating: Updating is the stage when the state of a component is updated and the application is repainted.
+Unmounting: As the name suggests Unmounting is the final step of the component lifecycle where the component is removed from the page.
+
+
+19. What is an event in React?
+An event is an action that could be triggered as a result of the user action or system generated event. For example, a mouse click, loading of a web page, pressing a key, window resizes, and other interactions are called events.
+
+20. How do you create an event in React?
+Handling events with React elements is very similar to handling events on DOM elements. There are some syntax differences: React events are named using camelCase, rather than lowercase. With JSX you pass a function as the event handler, rather than a string.

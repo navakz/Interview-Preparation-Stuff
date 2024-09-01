@@ -1,0 +1,167 @@
+React Router is the most popular library for implementing routing in React. It enables navigation between different components and handles dynamic URLs.
+
+npm install react-router-dom
+
+Basic Routing
+
+// App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Home from './Home';
+import About from './About';
+import Contact from './Contact';
+
+function App() {
+  return (
+    <Router>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/contact">Contact</Link>
+          </li>
+        </ul>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
+
+- Dynamic Routing with params
+ 
+// UserProfile.js
+import React from 'react';
+import { useParams } from 'react-router-dom';
+
+function UserProfile() {
+  const { userId } = useParams(); // Access the dynamic parameter
+
+  return <h2>User Profile for User ID: {userId}</h2>;
+}
+
+export default UserProfile;
+
+
+// App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Home from './Home';
+import About from './About';
+import Contact from './Contact';
+import UserProfile from './UserProfile';
+
+function App() {
+  return (
+    <Router>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/contact">Contact</Link>
+          </li>
+          <li>
+            <Link to="/user/123">User 123 Profile</Link>
+          </li>
+        </ul>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/user/:userId" element={<UserProfile />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
+
+- Redirecting with useNavigate:
+
+// RedirectExample.js
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+function RedirectExample() {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/about'); // Navigate to the About page
+  };
+
+  return <button onClick={handleClick}>Go to About Page</button>;
+}
+
+export default RedirectExample;
+
+
+
+- Redirecting on Route Change:
+
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+
+function ProtectedRoute({ isLoggedIn, children }) {
+  return isLoggedIn ? children : <Navigate to="/login" />;
+}
+
+export default ProtectedRoute;
+
+// App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import Home from './Home';
+import About from './About';
+import Contact from './Contact';
+import UserProfile from './UserProfile';
+import ProtectedRoute from './ProtectedRoute';
+
+function App() {
+  const isLoggedIn = false; // Example condition
+
+  return (
+    <Router>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          <li>
+            <Link to="/about">About</Link>
+          </li>
+          <li>
+            <Link to="/contact">Contact</Link>
+          </li>
+        </ul>
+      </nav>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<ProtectedRoute isLoggedIn={isLoggedIn}><About /></ProtectedRoute>} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/user/:userId" element={<UserProfile />} />
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
+
+

@@ -1,0 +1,48 @@
+Data definition language or DDL =>  allows execution of queries like CREATE, DROP, and ALTER. 
+
+Data manipulation Language or DML => access or manipulate data in the database.
+
+Views in SQL are a kind of virtual table. 
+We can create a view by selecting fields from one or more tables present in the database. 
+A View can either have all the rows of a table or specific rows based on certain conditions.
+CREATE VIEW view_name AS
+SELECT column1, column2.....
+FROM table_name
+WHERE condition;
+
+
+Stored Procedures: group of SQL statements created to perform one or more DML operations on databases which may or may not return a value. 
+
+SQL injection : Through web page inputs injecting SQL commands as statements
+
+Write a SQL query to get the top 5 highest-paid employees
+SELECT * FROM employees
+ORDER BY salary DESC
+LIMIT 5;
+
+Write a SQL query to get a list of all employees who do not belong to any department.
+SELECT e.name
+FROM employees e
+LEFT JOIN departments d ON e.department_id = d.department_id
+WHERE d.department_id IS NULL;
+
+
+Write a SQL query to find employees who are in department 1 but not in department 2.
+SELECT * FROM employees
+WHERE department_id = 1
+AND employee_id NOT IN (
+  SELECT employee_id FROM employees WHERE department_id = 2
+);
+
+
+Write a SQL query to delete all employees who have not received any salary.
+DELETE FROM employees
+WHERE salary IS NULL;
+
+
+selects the nth highest salary
+SELECT DISTINCT salary
+FROM employees
+ORDER BY salary DESC
+LIMIT 1 OFFSET n-1;
+

@@ -1,0 +1,341 @@
+1. Deal with errors in observables
+# 
+
+a. catchError operator
+
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+
+this.myService.getData().pipe(
+  catchError(error => {
+    console.error('Error:', error);
+    return of([]); // Returning an empty array or any fallback value
+  })
+).subscribe(data => {
+  // Handle the data
+});
+
+b. retry operator - Retry a failed request upto n number of times.
+
+import { retry } from 'rxjs/operators';
+
+this.myService.getData().pipe(
+  retry(3),                                   // Retry a failed request up to 3 times
+  catchError(error => {
+    console.error('Error:', error);
+    return of([]); // Fallback value
+  })
+).subscribe(data => {
+  // Handle the data
+});
+
+c. Centralized Error Handling:
+
+// error-handler.service.ts
+import { Injectable } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { throwError } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ErrorHandlerService {
+  handleError(error: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Server-side error
+      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.error(errorMessage);
+    return throwError(errorMessage);
+  }
+}
+
+// my-service.service.ts
+import { catchError } from 'rxjs/operators';
+import { ErrorHandlerService } from './error-handler.service';
+
+constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) {}
+
+getData() {
+  return this.http.get('api/data').pipe(
+    catchError(this.errorHandler.handleError)
+  );
+}
+
+
+2. How do you choose an element from a component template
+#
+a. Template Reference Variables
+
+<!-- In your component template -->
+<input #inputElement type="text">
+<button (click)="logValue(inputElement.value)">Log Value</button>
+
+// In your component class
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-example',
+  templateUrl: './example.component.html'
+})
+export class ExampleComponent {
+  logValue(value: string) {
+    console.log(value);
+  }
+}
+
+
+b. ViewChild Decorator - Allows you to access a DOM element or a child component in the component class after the view has been initialized
+
+<!-- In your component template -->
+<input #inputElement type="text">
+<button (click)="logValue()">Log Value</button>
+
+// In your component class
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  selector: 'app-example',
+  templateUrl: './example.component.html'
+})
+export class ExampleComponent implements AfterViewInit {
+  @ViewChild('inputElement') inputElementRef!: ElementRef;
+
+  ngAfterViewInit() {
+    console.log(this.inputElementRef.nativeElement.value);
+  }
+
+  logValue() {
+    console.log(this.inputElementRef.nativeElement.value);
+  }
+}
+
+
+c. ViewChildren Decorator - used to access multiple elements or components within the template. It returns a QueryList of elements
+
+<!-- In your component template -->
+<div *ngFor="let item of items" #divElements>{{ item }}</div>
+<button (click)="logValues()">Log Values</button>
+
+// In your component class
+import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@angular/core';
+
+@Component({
+  selector: 'app-example',
+  templateUrl: './example.component.html'
+})
+export class ExampleComponent implements AfterViewInit {
+  @ViewChildren('divElements') divElements!: QueryList<ElementRef>;
+
+  items = ['Item 1', 'Item 2', 'Item 3'];
+
+  ngAfterViewInit() {
+    this.divElements.toArray().forEach((el) => {
+      console.log(el.nativeElement.innerText);
+    });
+  }
+
+  logValues() {
+    this.divElements.toArray().forEach((el) => {
+      console.log(el.nativeElement.innerText);
+    });
+  }
+}
+
+
+3. Bootstrapping module : Main entry point of an Angular application (defined in the main.ts file and is configured in the Angular AppModule ). It is responsible for starting the application (sets up the necessary environment, loads required modules) and initializing the root component
+
+4. Change Detection : It is a mechanism that determines when and how to update the UI based on changes in the application's data model
+
+5. HTTP interceptors : Allows to modify or handle HTTP requests and responses at a centralized location before they reach the server or client. 
+This can be useful for logging requests, adding authentication headers, handling errors, or modifying request/response data.
+
+6. Transpiling : Converting TypeScript code into JavaScript code that web browsers can execute using the TypeScript compiler (tsc)
+
+7. router state : Represents the current state of the Angular router. It contains information about the current route, including the URL, route parameters, query parameters, and other related data. 
+
+8. Router links : used for navigation within an application (routerLink directive)
+#
+<nav>
+  <ul>
+    <li><a [routerLink]="['/home']" routerLinkActive="active">Home</a></li>
+	<li><a [routerLink]="['/path']" [queryParams]="{param1: 'value1', param2: 'value2'}">Test Page 1</a></li>
+	<li><a [routerLink]="['/details', id]">Details</a></li>
+    <li><a [routerLink]="['/about']" routerLinkActive="active">About</a></li>
+    <li><a [routerLink]="['/contact']" routerLinkActive="active">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Router outlet to render components -->
+<router-outlet></router-outlet>
+
+The routerLinkActive directive can be used to add a CSS class to the active link: the class 'active' will be applied to the link when the route is active.
+
+9. Decorators : decorators are a special kind of declaration that can be attached to classes, methods, properties, and parameter.
+
+1. class - @Component, @Directive, @Pipe, @NgModule, @Injectable
+2. property - @Input, @Output, @HostBinding
+3. method - @HostListener
+4. parameter - @Inject
+
+10. Parameterized Pipe: Custom pipe that accepts arguments to transform data in a more flexible way.
+
+import { Pipe, PipeTransform } from '@angular/core';
+import { formatDate } from '@angular/common';
+
+@Pipe({
+  name: 'dateFormat'
+})
+export class DateFormatPipe implements PipeTransform {
+  transform(value: Date | string, format: string = 'mediumDate', locale: string = 'en-US'): string {
+    if (!value) {
+      return '';
+    }
+    return formatDate(value, format, locale);
+  }
+}
+
+
+// Registering the pipe in app.module.ts file
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { AppComponent } from './app.component';
+import { DateFormatPipe } from './date-format.pipe';
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    DateFormatPipe
+  ],
+  imports: [
+    BrowserModule
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+
+<p>{{ '2024-07-24T14:45:00' | dateFormat:'fullDate' }}</p> <!-- Output: Wednesday, July 24, 2024 -->
+<p>{{ '2024-07-24T14:45:00' | dateFormat:'shortTime' }}</p> <!-- Output: 2:45 PM -->
+<p>{{ '2024-07-24T14:45:00' | dateFormat:'yyyy-MM-dd' }}</p> <!-- Output: 2024-07-24 -->
+
+
+11. MVVM - Model-View-ViewModel : separates the user interface logic from the business logic. responsible for storing and managing data
+
+12. Dependency injection : It's a way to provide things (like services) that a class needs,  instead of class creating itself. This makes the code cleaner and easier to manage.
+
+13. Components : They are the smallest, self-contained units in an Angular application. Typically used to represent a view or UI element
+
+14. Modules : They are large units that group together one or more related components. 
+
+15. Services : They are singleton objects that provide specific functionality throughout an Angular application, such as data access or logging.
+
+16. Eager loading : It's the default module-loading strategy. Feature modules are loaded before the application starts. This is typically used for small size applications.
+
+17. Lazy loading : Dynamically loads the feature modules when there's a demand. This makes the application faster. It is used for bigger applications.
+
+18. Template-driven Forms:
+- Declarative: Most of the form logic is in the template.
+- Simple Setup: Easy to set up for simple forms.
+- Two-way Binding: Uses Angular's two-way binding with ngModel.
+- Less Control: Less control over the form and validation logic.
+
+19. Reactive Forms:
+- Programmatic: Most of the form logic is in the component.
+- Complex Setup: More setup, but more powerful and flexible.
+- Immutable Data: Uses reactive patterns with observables and streams.
+- More Control: Full control over the form and validation logic, suitable for complex forms.
+
+20. Promise: Eventual completion/failure of an asynchronous operation. 
+
+function getData(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve('Data received!');
+    }, 2000);
+  });
+}
+
+getData().then(
+  data => console.log(data),  // Logs "Data received!" after 2 seconds
+  error => console.error(error)
+);
+
+21. Observables : Over a time which can emit multiple values and can be canceled.
+
+import { Observable } from 'rxjs';
+
+const observable = new Observable(subscriber => {
+  setTimeout(() => {
+    subscriber.next('First value');
+  }, 1000);
+
+  setTimeout(() => {
+    subscriber.next('Second value');
+    subscriber.complete(); // Observable completes here
+  }, 2000);
+});
+
+observable.subscribe({
+  next(x) { console.log('Received:', x); },
+  error(err) { console.error('Error:', err); },
+  complete() { console.log('Observable completed'); }
+});
+
+// Output after 1 second: Received: First value
+// Output after 2 seconds: Received: Second value
+// Output after 2 seconds: Observable completed
+
+21.  Ahead-of-time (AOT) : AOT compiler converts the Angular HTML and TypeScript code into JavaScript code during the build phase.
+
+22. Directives : They are used to extend the functionality of HTML elements
+a. Component Directives: selector, template
+@Component({
+  selector: // Defines the HTML tag that will represent this component.
+  template:// Defines the HTML layout for the component.
+})
+b. Structural Directives: They change the structure of the DOM by adding or removing elements.
+Ex: *ngIf, *ngFor, *ngSwitch
+c. Attribute Directives: They change the appearance or behavior of elements.
+Ex: ngClass, 
+
+23. Angular Universal - facilitates server-side rendering to work seamlessly with an ExpressJS web server, which compiles HTML pages.
+
+24. @NgModule: Declarations, imports, exports, bootstrap, providers
+    @Component: standalone, imports, selector, templateUrl, styleUrls
+
+25. Promise: Provides a single value. 
+    Observable : Provides multiple values over time.
+	
+26. Principles of a good angular code. 
+    1. Modularised
+	2. Component based archeitecture
+	3. Consistent naming conventions
+	4. Code formatting and indentation
+	5. Use Typescript instead of JavaScript
+	6. Write Unit Tests
+	7. Use DI, Use Rxjs , Use observables
+
+27. Unit testing : import { TestBed } from '@angular/core/testing';
+    it('.....', () => {
+      expect(component.greetUser()).toBe('Hello, User!');
+    });
+
+
+28. optimize the performance
+
+1. Use OnPush change detection strategy: The OnPush change detection strategy allows Angular to check for changes only when the input reference to a component changes.
+2. Lazy loading
+3. Minimize HTTP requests: Minifying your CSS and JavaScript files, using a CDN, and caching resources.
+4. Use Angular Universal: Angular Universal is a server-side rendering (SSR) framework that allows you to render your Angular application on the server before sending it to the client. This approach can improve the initial load time of your application, as well as the SEO of your application.
+5. Use performance monitoring tools: Use tools like Chrome DevTools, Angular Augury 
+
+
+29. Async pipe - It serves to identify components that require change detection and returns the most recently emitted value
+
+

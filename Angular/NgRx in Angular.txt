@@ -1,0 +1,146 @@
+Key Concepts in NgRx
+- Store: A centralized place to store your application's state.
+- Actions: Represent events to change the state.
+- Reducers: Functions that handle state changes based on actions.
+- Selectors: Functions used to select specific pieces of state from the store.
+- Effects: Manage side effects, such as data fetching or interacting with external APIs.
+
+1. Install NgRx Packages
+
+You need to install the NgRx packages using npm:
+ng add @ngrx/store
+ng add @ngrx/effects
+ng add @ngrx/store-devtools
+
+Share JSON object 
+
+- Define the JSON Object and State
+- Create Actions for State Management
+- Implement Reducers to Handle Actions
+- Use Selectors to Retrieve State
+- Dispatch Actions and Access State in Components
+
+Create files to define the state, actions, and reducers.
+
+- State:
+
+// state.ts
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+export interface AppState {
+  user: User | null;
+}
+
+export const initialState: AppState = {
+  user: null,
+};
+
+
+- Actions:
+
+// user.actions.ts
+import { createAction, props } from '@ngrx/store';
+import { User } from './state';
+
+export const loadUser = createAction('[User] Load User', props<{ user: User }>());
+export const clearUser = createAction('[User] Clear User');
+
+
+- Reducer: 
+// user.reducer.ts
+import { createReducer, on } from '@ngrx/store';
+import { loadUser, clearUser } from './user.actions';
+import { AppState, initialState } from './state';
+
+const _userReducer = createReducer(
+  initialState,
+  on(loadUser, (state, { user }) => ({ ...state, user })),
+  on(clearUser, state => ({ ...state, user: null }))
+);
+
+export function userReducer(state: AppState | undefined, action: Action) {
+  return _userReducer(state, action);
+}
+
+- Selector:
+// user.selectors.ts
+import { createSelector } from '@ngrx/store';
+import { AppState } from './state';
+
+export const selectUser = (state: AppState) => state.user;
+
+export const selectUserName = createSelector(
+  selectUser,
+  (user) => user ? user.name : null
+);
+
+
+- Dispatch
+// user.component.ts
+import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from './state';
+import { loadUser, clearUser } from './user.actions';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+})
+export class UserComponent {
+  constructor(private store: Store<AppState>) {}
+
+  loadUser() {
+    const user = { id: 1, name: 'John Doe', email: 'john.doe@example.com' };
+    this.store.dispatch(loadUser({ user }));
+  }
+
+  clearUser() {
+    this.store.dispatch(clearUser());
+  }
+}
+
+
+
+-Accessing State:
+// user.component.ts
+import { Component } from '@angular/core';
+import { Store, select } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { AppState } from './state';
+import { selectUserName } from './user.selectors';
+import { loadUser, clearUser } from './user.actions';
+
+@Component({
+  selector: 'app-user',
+  templateUrl: './user.component.html',
+})
+export class UserComponent {
+  userName$: Observable<string | null>;
+
+  constructor(private store: Store<AppState>) {
+    this.userName$ = this.store.pipe(select(selectUserName));
+  }
+
+  loadUser() {
+    const user = { id: 1, name: 'John Doe', email: 'john.doe@example.com' };
+    this.store.dispatch(loadUser({ user }));
+  }
+
+  clearUser() {
+    this.store.dispatch(clearUser());
+  }
+}
+
+
+<!-- user.component.html -->
+<div>
+  <button (click)="loadUser()">Load User</button>
+  <button (click)="clearUser()">Clear User</button>
+  <div *ngIf="userName$ | async as userName">
+    <p>User Name: {{ userName }}</p>
+  </div>
+</div>

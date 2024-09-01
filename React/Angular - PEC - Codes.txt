@@ -1,0 +1,77 @@
+@Component({
+    selector: 'pec-srm-add-edit-document',
+    standalone: true,
+    imports: [
+        CommonModule,
+        CommonModule,
+        MatButtonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        SnackBarModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        DatepickerComponent,
+        MatRadioModule,
+        MultiSelectComponent,
+        MatIconModule,
+    ],
+    templateUrl: './add-edit-document.component.html',
+    styleUrls: ['./add-edit-document.component.scss'],
+})
+
+
+export class AddEditDocumentComponent implements OnInit, OnDestroy {
+    form = new FormGroup({
+        docType: new FormControl<Value>([], Validators.required),
+        editDocType: new FormControl<number>(0, Validators.required),
+        docList: new FormControl<number[]>([], Validators.required),
+        dateDue: new FormControl<string>('', Validators.required),
+        docStatus: new FormControl<string>('', Validators.required),
+        commentArea: new FormControl<string>('', Validators.nullValidator),
+    });
+	subs = new SubSink();
+    @ViewChild('dateDue', { static: false })
+    dateDue!: DatepickerComponent;
+    @ViewChild('docType', { static: false }) docType!: MultiSelectComponent;
+
+    constructor(
+        public dialogRef: MatDialogRef<AddEditDocumentComponent>,
+        private studentDocumentService: StudentDocumentService,
+        private cvueservice: CvueService,
+        private aRoute: ActivatedRoute,
+        private snackBarService: SnackBarService,
+        public alertDialog: MatDialog,
+        private dialog: MatDialog,
+        @Inject(MAT_DIALOG_DATA) public data: IDialogRequest,
+    ) {
+        this.subs.add(
+            this.aRoute.queryParams.subscribe((data) => {
+                this.studentID = data['studentid'];
+                this.enrollmentID = data['enr'];
+            }),
+        );
+    }
+}
+
+
+
+
+import { KeyValue } from '@angular/common';
+import { Injectable } from '@angular/core';
+
+
+@Injectable({
+    providedIn: 'root',
+})
+export class StudentDocumentService {
+    private paramsGet: KeyValue<string, string>[] = [];
+
+    constructor(private apiService: ApiService, private urlLocationService: UrlLocationService) {}
+
+    getStudentDocuments(studentDocumentsParams: IStudentDocumentsRequest): Observable<IStudentDocuments[]> {
+        this.apiService.REST_API = `${this.urlLocationService.getOrigin()}/api/common/`;
+        return this.apiService.PostWithReturnType<IStudentDocumentsRequest, IStudentDocuments[]>(
+            `technical/getStudentDocuments`,
+            studentDocumentsParams,
+        );
+    }

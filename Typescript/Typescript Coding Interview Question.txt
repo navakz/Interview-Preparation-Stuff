@@ -1,0 +1,31 @@
+const value: unknown = { "name": "John Doe"};
+
+if (typeof value === "object" && value !== null && 'name' in value) {
+	console.log(value.name);
+}
+
+
+interface Person {
+	name: string;
+}
+
+const isPerson = (value: unknown): value is Person => typeof value === "object" && value !== null && 'name' in value;
+
+const person: unknown = { "name": "John Doe"};
+
+if (isPerson(person)) {
+	console.log(person.name);
+}
+
+const person: unknown = { "name": "John Doe"};
+
+// Please fix this error, without using `any` or type-casting
+console.log(person.name);
+
+
+let a=1,b=a;
+b=2;
+let c={c:1}
+let d=c;
+
+// print c,d,a

@@ -1,0 +1,26 @@
+Virtual DOM | Real DOM | Shadow DOM
+Reconcilation
+Features of ES5, ES6
+key, props , state , refs
+Pure component | Impure component
+useEffect, useReducer, useState, useMemo, useRef, useCallback
+ContextAPI
+Prop Drilling
+shouldComponentUpdate
+Synthetic Events
+HOC
+Redux, Action, Store
+Shallow Rendering | Full Rendering
+Mounting Phase
+Updating Phase
+Unmounting Phase
+class comp | functional comp
+spread operator | rest operator
+destructuring
+webpack
+scss
+sass
+react app for SEO
+Self Invoking Fn
+
+

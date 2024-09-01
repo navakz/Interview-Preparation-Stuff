@@ -1,0 +1,135 @@
+1. Basic Routing: Define routes and associate them with components.
+2. Route Parameters: Pass and retrieve dynamic data through routes.
+3. Child Routes: Manage nested routes within components.
+4. Lazy Loading: Load modules on demand to improve performance.
+5. Guards: Control access to routes based on conditions.
+6. Query Parameters: Pass additional parameters in the URL.
+7. Resolvers: Pre-fetch data before navigating to a route.
+
+
+In the root module (AppModule), you need to import RouterModule and configure your routes using Routes.
+
+app.module.ts:
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule, Routes } from '@angular/router';
+import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
+import { AboutComponent } from './about/about.component';
+
+const routes: Routes = [
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] }
+  { path: 'home', component: HomeComponent },
+  { path: 'about', component: AboutComponent },
+  { path: 'profile/:id', component: ProfileComponent },
+  { path: 'products', component: ProductsComponent, children: [
+    { path: 'details/:id', component: ProductDetailsComponent }
+  ]},
+  { path: 'lazyproducts', loadChildren: () => import('./products/products.module').then(m => m.ProductsModule) }
+];
+
+@NgModule({
+  declarations: [
+    AppComponent,
+    HomeComponent,
+    AboutComponent
+  ],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(routes)
+  ],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+app.component.html:
+
+<nav>
+  <a routerLink="/">Home</a>
+  <a routerLink="/about">About</a>
+  <a [routerLink]="['/search']" [queryParams]="{ term: 'angular' }">Search</a>
+</nav>
+
+<router-outlet></router-outlet>
+
+
+<!-- Retrieve query parameters -->
+import { ActivatedRoute } from '@angular/router';
+
+export class SearchComponent implements OnInit {
+  searchTerm: string;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.searchTerm = this.route.snapshot.queryParamMap.get('term');
+  }
+}
+
+// Access route parameter in the component
+import { ActivatedRoute } from '@angular/router';
+
+export class ProfileComponent implements OnInit {
+  id: string;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.id = this.route.snapshot.paramMap.get('id');
+  }
+}
+
+
+// auth.guard.ts
+import { Injectable } from '@angular/core';
+import { CanActivate, Router } from '@angular/router';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class AuthGuard implements CanActivate {
+  constructor(private router: Router) {}
+
+  canActivate(): boolean {
+    // Check authentication status
+    const isAuthenticated = false; // Replace with real check
+    if (!isAuthenticated) {
+      this.router.navigate(['/login']);
+      return false;
+    }
+    return true;
+  }
+}
+
+Route Resolvers:
+
+Pre-fetch data before navigating to a route:
+
+
+// data.resolver.ts
+import { Injectable } from '@angular/core';
+import { Resolve } from '@angular/router';
+import { DataService } from './data.service';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataResolver implements Resolve<any> {
+  constructor(private dataService: DataService) {}
+
+  resolve() {
+    return this.dataService.getData();
+  }
+}
+
+// app-routing.module.ts
+const routes: Routes = [
+  { path: 'data', component: DataComponent, resolve: { data: DataResolver } }
+];
+
+
+
+

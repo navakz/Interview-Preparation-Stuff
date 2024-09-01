@@ -1,0 +1,51 @@
+- Create an authentication service:  '@angular/common/http'
+
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { tap, map } from 'rxjs/operators';
+
+constructor(private http: HttpClient) {}
+
+- Implement guards: '@angular/router';
+
+1. CanActivate: Prevents unauthorized users from accessing a route.
+2. CanActivateChild: Prevents unauthorized users from accessing child routes.
+3. CanDeactivate: Prevents users from leaving a route (e.g., if a form is unsaved).
+4. Resolve: Pre-fetches data before the route is activated.
+5. CanLoad: Prevents the application from loading entire feature modules lazily.
+
+
+const routes: Routes = [
+ {
+    path: 'admin',
+    component: AdminComponent,
+    canActivateChild: [AuthGuard],
+    children: [
+      { path: 'dashboard', component: DashboardComponent },
+      { path: 'settings', component: SettingsComponent }
+    ]
+  },
+  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
+  { path: 'admin', loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule), canLoad: [CanLoadGuard] },
+  { path: 'login', component: LoginComponent },
+  // other routes...
+];
+
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule]
+})
+
+
+- Use tokens for authorization:
+
+// req.headers.set('Authorization', `Bearer ${token}`)
+
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+
+@NgModule({
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ]
+})

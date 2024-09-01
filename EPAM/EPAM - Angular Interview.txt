@@ -1,0 +1,474 @@
+deep copying vs shallow copying
+Anagram
+calc(10).add(4).multiply(2).result();
+null| undefined
+Prototypes and prototype inheritance
+how error is handled in async await
+how error is handled in Promise.all
+webworkers and service workers in html
+function chaining
+What is the purpose of JavaScript's "this" keyword?
+hat is the purpose of the Array.map() function in JavaScript?
+
+forEach | map
+forEach | for of
+how do you iterate over an object
+event loop | micro task | macro task
+
+
+use of git rebase/origin
+
+unit testing in Angular
+observables | promise
+semantic html - how can we overcome if we use div span 
+Angular component structure
+standalone components
+
+
+performance compare map,forEach, for
+Promise different functions. Promise.all
+Promise | observable
+callback | promise
+
+var obj = {
+  name: "Hello",
+  helloworld: function() {
+    return "Hello world " + this.name;
+  }
+};
+
+var obj2 = {
+  name: "bye",
+  helloworld: obj.helloworld // Assign the function, not its result
+};
+
+console.log(obj2.helloworld()); // This will result in "Hello world bye"
+Function Assignment:
+
+obj2.helloworld = obj.helloworld assigns the method helloworld from obj to obj2, but this in obj2.helloworld will refer to obj2, not obj.
+
+
+
+https | http
+cors - how do we overcome cors error
+box layout
+pseudo classes | pseudo elements
+
+
+
+
+
+
+
+
+fileChange(files: File[]): void {
+        this.isUpldBtnDisabled = files.length > 0 ? false : true;
+        const processPromises = files.map((file) => this.processSelectedFiles(file));
+        Promise.all(processPromises)
+            .then(() => {
+                console.log('Finished Processing');
+            })
+            .catch((error) => {
+                console.error('Error processing files:', error);
+            });
+    }
+
+    private processSelectedFiles(file: File): Promise<void> {
+        return new Promise((resolve, reject) => {
+            FileHelper.ConvertBlobToBase64(file.slice())
+                .then((base64) => {
+                    const fileExtension: string = file.name.split('.')[1].toLowerCase();
+                    const allowedExtensions = ['jpg', 'gif', 'jpeg', 'bmp', 'tif', 'png'];
+                    const fileFormat: string = allowedExtensions.includes(fileExtension) ? 'other' : fileExtension;
+                    this.document.push({ Content: base64, Type: EOutputType[fileFormat as keyof typeof EOutputType] });
+                    resolve();
+                })
+                .catch((error) => {
+                    console.error('Error processing file:', error);
+                    reject(error);
+                });
+        });
+    }
+
+
+
+
+
+import { KeyValue } from '@angular/common';
+import * as FileSaver from 'file-saver';
+
+export enum FileTypes {
+    Text = 'text/plain;charset=utf-8',
+    Excel = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
+    Gif = 'image/gif',
+    Jpeg = 'image/jpeg',
+    Pdf = 'application/pdf',
+    Png = 'image/png',
+    Html = 'text/html;charset=utf-8',
+    Rtf = 'text/rtf;charset=utf-8',
+    Xlsm = 'application/vnd.ms-excel.sheet.macroEnabled.12;charset=UTF-8',
+    Word = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document;charset=UTF-8',
+}
+
+export enum FileNames {
+    Text = 'text',
+    Xls = 'xls',
+    Xlsx = 'xlsx',
+    Pdf = 'pdf',
+    Html = 'html',
+    Rtf = 'rtf',
+    Xlsm = 'xlsm',
+    Doc = 'doc',
+    Docx = 'docx',
+}
+
+export class FileHelperError extends Error {
+    constructor(msg: string) {
+        super(msg);
+        this.name = 'FileHelperError';
+    }
+}
+
+/** Helper class for process files */
+export class FileHelper extends FileHelperError {
+    /**
+     * Converts Base64 encoded string to Blob
+     * @param data Base64 encoded string
+     * @returns Blob of base 64 encoded string
+     */
+    public static ConvertEncodingToBlob(data: string, contentType: FileTypes | string): Blob {
+        const decoded = atob(data);
+        const buffer = new Array(decoded.length);
+
+        for (let i = 0; i < buffer.length; i++) {
+            buffer[i] = decoded.charCodeAt(i);
+        }
+        const array = new Uint8Array(buffer);
+
+        return new Blob([array], { type: contentType });
+    }
+
+    /**
+     * Converts Blob into Base64 encoded string
+     * @param data the Blob of data
+     * @returns Base64 encoded string
+     */
+    public static async ConvertBlobToBase64(data: Blob): Promise<string> {
+        const fileReader = new FileReader();
+
+        const fileLoaded = new Promise<string>((resolve, reject) => {
+            fileReader.onload = () => {
+                try {
+                    const base64 = fileReader.result as string;
+
+                    // removing leading: data:*/*;base64
+                    resolve(base64.split(',')[1]);
+                } catch (e) {
+                    console.log(e);
+                    reject(e);
+                }
+            };
+        });
+
+        fileReader.readAsDataURL(data);
+
+        return fileLoaded;
+    }
+
+    /**
+     * Gets base64 encoded image data for inline HTML use
+     * @param imgUrl the server URL of the image
+     * @returns Promise of base64 encoded string
+     */
+    public static async GetInlineImageBase64(imgUrl: string): Promise<string> {
+        const http = new XMLHttpRequest();
+        http.responseType = 'blob';
+
+        const fileLoaded = new Promise<string>((resolve, reject) => {
+            http.onreadystatechange = function () {
+                try {
+                    if (http.readyState == 4 && http.status == 200) {
+                        FileHelper.ConvertBlobToBase64(http.response as Blob)
+                            .then((q) => {
+                                resolve(`*/*;base64,${q}`);
+                            })
+                            .catch((e) => reject(e));
+                    }
+                } catch (e) {
+                    console.log(e);
+                    reject(e);
+                }
+            };
+
+            http.onerror = function () {
+                reject('error');
+            };
+        });
+
+        http.open('GET', imgUrl, true);
+        http.send();
+
+        return fileLoaded;
+    }
+
+    /**
+     * Takes an HTML page and renders the images within it.
+     * Images that will be rendered will be of type: <img src="URL_To_Image"
+     * @param html the raw HTML
+     * @returns HTML code with inline images attached and rendered
+     */
+    public static async AttachInlineImagesToHtml(html: string): Promise<string> {
+        let newHtml = html;
+        const reg = /<img src ?= ?["'][\w/_.]+['"]/g;
+        const urlReg = /(["'])(?:(?=(\\?))\2.)*?\1/g;
+
+        let value = '';
+        let q;
+
+        while ((q = reg.exec(html)) !== null) {
+            value = q[0];
+
+            let w;
+            let params = '';
+            while ((w = urlReg.exec(value)) !== null) {
+                params = w[0];
+
+                const url = params.substring(1, params.length - 1);
+                const base64 = await FileHelper.GetInlineImageBase64(url);
+
+                newHtml = newHtml.replace(value, `<img src="${base64}"`);
+            }
+        }
+
+        return new Promise<string>((resolve) => {
+            resolve(newHtml);
+        });
+    }
+
+    /**
+     * Takes an HTMLtemplate and converts all inline images into a base 64 encoded string
+     * @param html the html
+     * @returns mapping of URL and base 64 encoded string
+     */
+    public static async GetImageEncodedMapping(html: string): Promise<KeyValue<string, string>[]> {
+        const reg = /<img src ?= ?["'][\w/_.]+['"]/g;
+        const urlReg = /(["'])(?:(?=(\\?))\2.)*?\1/g;
+
+        const mapping: KeyValue<string, string>[] = [];
+
+        let value = '';
+        let q;
+
+        while ((q = reg.exec(html)) !== null) {
+            value = q[0];
+
+            let w;
+            let params = '';
+            while ((w = urlReg.exec(value)) !== null) {
+                params = w[0];
+
+                const url = params.substring(1, params.length - 1);
+                const e: string | null = await FileHelper.GetInlineImageBase64(url).catch((err) => {
+                    return new Promise((reject) => reject(err));
+                });
+
+                if (e === null) {
+                    return new Promise((reject) => reject([]));
+                }
+
+                const base64 = e.split(',')[1];
+                mapping.push({
+                    key: url,
+                    value: base64,
+                });
+            }
+        }
+
+        return new Promise<KeyValue<string, string>[]>((resolve) => {
+            resolve(mapping);
+        });
+    }
+
+    /** Downloads file to end-users computer
+     * @param fileContents the file contents, as a blob type
+     * @param fileName the name of the file (i.e., what it will be saved as on the computer)
+     */
+    public static DownloadFile(fileContents: Blob, fileName: string): void {
+        FileSaver.saveAs(fileContents as Blob, fileName);
+    }
+}
+
+
+
+import { KeyValue } from '@angular/common';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams, HttpContext } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { IApiService } from '../../../../entities/src';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class ApiService implements IApiService {
+    // Node/Express API
+    REST_API!: string;
+    credentialValue!: boolean;
+    useCredentials = true;
+
+    // Http Header
+    httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
+
+    constructor(private http: HttpClient) {}
+
+    public Get<T>(routeUrl: string): Observable<T> {
+        return this.http
+            .get<T>(this.REST_API + routeUrl, {
+                //headers:this.httpHeaders,
+                withCredentials: this.useCredentials,
+            })
+            .pipe(
+                map((res: T) => {
+                    return res;
+                }),
+                catchError(this.handleError),
+            );
+    }
+
+    public GetWithParams<T>(
+        routeUrl: string,
+        params: Array<KeyValue<string, string | number | boolean>>,
+    ): Observable<T> {
+        let param = new HttpParams();
+
+        params.forEach((x) => {
+            param = param.set(x.key, x.value);
+        });
+
+        return this.http
+            .get<T>(this.REST_API + routeUrl, {
+                params: param,
+                withCredentials: this.useCredentials,
+                //headers: this.httpHeaders
+            })
+            .pipe(
+                map((res: T) => {
+                    return res;
+                }),
+                catchError(this.handleError),
+            );
+    }
+
+    public GetWithArrayBuffer<T>(
+        routeUrl: string,
+        params: Array<KeyValue<string, string | number | boolean>>,
+    ): Observable<T> {
+        let param = new HttpParams();
+
+        params.forEach((x) => {
+            param = param.set(x.key, x.value);
+        });
+
+        return this.http
+            .get<T>(this.REST_API + routeUrl, {
+                params: param,
+                withCredentials: this.useCredentials,
+                responseType: 'arraybuffer' as 'json',
+            })
+            .pipe(
+                map((res: T) => {
+                    return res;
+                }),
+                catchError(this.handleError),
+            );
+    }
+
+    public Post<T>(routeUrl: string, data: T): Observable<T> {
+        return this.http.post<T>(this.REST_API + routeUrl, data, {}).pipe(catchError(this.handleError));
+    }
+
+    public PostWithArrayBuffer<T>(routeUrl: string, data: T): Observable<ArrayBuffer> {
+        return this.http
+            .post(this.REST_API + routeUrl, data, {
+                responseType: 'arraybuffer', // Set the responseType to 'arraybuffer'
+            })
+            .pipe(catchError(this.handleError));
+    }
+
+    /**Post File Attachments or any Form Data to API endpoint. Return true or false if the operation failed. */
+    public PostFormData<T>(routeUrl: string, data: T): Observable<boolean> {
+        return this.http.post<boolean>(this.REST_API + routeUrl, data, {}).pipe(catchError(this.handleError));
+    }
+    /**Post File Attachments or any Form Data to API endpoint. Define return type data */
+    public PostFormDataWithReturnType<T, K>(routeUrl: string, data: T): Observable<K> {
+        return this.http.post<K>(this.REST_API + routeUrl, data, {}).pipe(catchError(this.handleError));
+    }
+
+    /**Post Data to API endpoint without headers. Define return type data */
+    public PostDataWithReturnType<T, K>(routeUrl: string, data: T): Observable<K> {
+        return this.http.post<K>(this.REST_API + routeUrl, data).pipe(catchError(this.handleError));
+    }
+
+    public PostWithReturnType<T, K>(routeUrl: string, data: T): Observable<K> {
+        return this.http
+            .post<K>(this.REST_API + routeUrl, data, {
+                headers: this.httpHeaders,
+            })
+            .pipe(catchError(this.handleError));
+    }
+
+    public PostParametersWithHeaders(
+        routeUrl: string,
+        params: Array<KeyValue<string, string | number>>,
+    ): Observable<boolean> {
+        let param = new HttpParams();
+
+        params.forEach((x) => {
+            param = param.set(x.key, x.value);
+        });
+
+        return this.http
+            .post<boolean>(this.REST_API + routeUrl, {
+                params: param,
+                header: this.httpHeaders,
+            })
+            .pipe(catchError(this.handleError));
+    }
+
+    public PutParametersWithHeaders(
+        routeUrl: string,
+        params: Array<KeyValue<string, string | number>>,
+    ): Observable<boolean> {
+        let param = new HttpParams();
+        let header = new HttpHeaders();
+
+        header = header.set('Content-Type', 'multipart/form-data');
+
+        params.forEach((x) => {
+            param = param.set(x.key, x.value);
+        });
+
+        console.log(param);
+
+        return this.http
+            .post<boolean>(this.REST_API + routeUrl, {
+                params: param,
+                header: header,
+            })
+            .pipe(catchError(this.handleError));
+    }
+
+    // Error handler
+    handleError(error: HttpErrorResponse) {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) {
+            // Handle client error
+            errorMessage = error.error.message;
+        } else {
+            // Handle server error
+            errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+        }
+        console.log(errorMessage);
+        return throwError(() => new Error(errorMessage));
+    }
+}

@@ -1,0 +1,200 @@
+key props ?
+
+pure components ?
+
+virtual DOM vs Shadow DOM ?
+
+synthetic events ? 
+
+what is the use of return in useEffect hook ? // cleanup - > component did mount
+
+Suspense , lazy loading
+
+redux archeitecture in react
+
+Prop Drilling
+
+
+Input :"aaavvccfr", Output:"a3v2c2fr1"
+
+Custom Hooks provides a reusable way to manage form state and validation in React applications
+
+import React, { useState, useEffect } from 'react';
+
+const DataFetchingComponent = () => {
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('https://api.example.com/data');        
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.log(error)
+      }
+    };
+
+    fetchData();
+  }, []);
+  return (
+    <div>
+      <h1>Fetched Data</h1>
+      <ul>
+        {data.map(item => (
+          <li key={item.id}>{item.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+
+}
+
+
+Handling nested state updates efficiently in a complex React component can be achieved using the `useReducer` hook. The `useReducer` hook is particularly useful when you have complex state logic that involves multiple sub-values or when the next state depends on the previous state.
+import React, { useReducer } from "react";
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "INCREMENT":
+      return { count: state.count + 1, showText: state.showText };
+    case "toggleShowText":
+      return { count: state.count, showText: !state.showText };
+    default:
+      return state;
+  }
+};
+
+const ReducerTutorial = () => {
+  const [state, dispatch] = useReducer(reducer, { count: 0, showText: true });
+
+  return (
+    <div>
+      <h1>{state.count}</h1>
+      <button
+        onClick={() => {
+          dispatch({ type: "INCREMENT" });
+          dispatch({ type: "toggleShowText" });
+        }}
+      >
+        Click Here
+      </button>
+
+      {state.showText && <p>This is a text</p>}
+    </div>
+  );
+};
+
+export default ReducerTutorial;
+
+
+
+Optimizing data fetching
+
+1. React Query performs the fetch and then stores the result in a cache.
+
+The key you provide ('postsData') is used as the identifier for this cache. If useQuery is called again with the same key while the data is still in the cache, React Query will return the cached data instead of performing a new fetch.
+
+import React from "react";
+import { useQuery } from "react-query";
+import axios from "axios";
+
+const retrievePosts = async () => {
+  const response = await axios.get(
+    "https://jsonplaceholder.typicode.com/posts",
+  );
+  return response.data;
+};
+
+const DisplayPosts = () => {
+  const {
+    data: posts,
+    error,
+    isLoading,
+  } = useQuery("postsData", retrievePosts);
+
+  if (isLoading) return <div>Fetching posts...</div>;
+  if (error) return <div>An error occurred: {error.message}</div>;
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+};
+
+export default DisplayPosts;
+
+
+2. Lazy loading
+
+import React, { Suspense } from "react";
+const Customer = React.lazy(() => import("./Customer.js"));
+const Admin = React.lazy(() => import("./Admin.js"));
+
+//Instead of regular import statements, we will use the above approach for lazy loading
+
+export default (props) => {
+	if (props.user === "admin") {
+		return (
+			// fallback component is rendered until our main component is loaded
+			<Suspense fallback={<div>Loading</div>}>
+				<Admin />
+			</Suspense>
+		);
+	} else if (props.user === "customer") {
+		return (
+			<Suspense fallback={<div>Loading</div>}>
+				<Customer />
+			</Suspense>
+		);
+	} else {
+		return <div> Invalid User </div>;
+	}
+};
+
+
+
+useMemo - Memorizes the value returned from the function.
+
+
+Higher-order components are a design pattern in React where a function takes a component as an argument and returns an enhanced new component.
+
+
+import React, { Component } from "react";
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Link,
+} from "react-router-dom";
+<Router>
+<Routes>
+                        <Route
+                            path="/"
+                            element={<Home />}
+                        ></Route>
+                        <Route
+                            path="/about"
+                            element={<About />}
+                        ></Route>
+                        <Route
+                            path="/contact"
+                            element={<Contact />}
+                        ></Route>
+                    </Routes>
+</Router>
+
+
+Jest is a popular testing framework for React that is simple and powerful enough to write and execute unit tests in React.
+
+import React from 'react';
+import { render } from '@testing-library/react';
+import HelloWorld from './HelloWorld';
+
+test('renders a message', () => {
+const { getByText } = render(<MyComponent message="Hello, World!" />);
+const messageElement = getByText(/Hello, World!/i);
+expect(messageElement).toBeInTheDocument();
+});

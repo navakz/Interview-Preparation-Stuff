@@ -1,0 +1,120 @@
+Template-driven Forms : 
+Template-driven forms are straightforward and declarative. They are suitable for simple forms and rely on Angular's two-way data binding and directives. You primarily work within the template to create and manage forms.
+
+Example of a Template-driven Form
+
+Import FormsModule in Your Module:
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, FormsModule],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+Create a Form in the Template:
+
+<form #form="ngForm" (ngSubmit)="onSubmit(form)">
+  <div>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" ngModel required>
+  </div>
+  <div>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" ngModel required email>
+  </div>
+  <button type="submit">Submit</button>
+</form>
+
+Handle Form Submission in the Component:
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" ngModel required>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" ngModel required email>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  `
+})
+export class AppComponent {
+  onSubmit(form: any) {
+    console.log('Form Data: ', form.value);
+  }
+}
+
+
+Reactive Forms
+Reactive forms provide a more programmatic way to build and manage forms. They are more powerful and suitable for complex forms with dynamic validation and more control over form behavior.
+
+Example of a Reactive Form
+
+Import ReactiveFormsModule in Your Module:
+
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AppComponent } from './app.component';
+
+@NgModule({
+  declarations: [AppComponent],
+  imports: [BrowserModule, ReactiveFormsModule],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+
+Create a Reactive Form in the Component:
+
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" formControlName="name">
+        <div *ngIf="form.get('name').invalid && form.get('name').touched">
+          Name is required.
+        </div>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" formControlName="email">
+        <div *ngIf="form.get('email').invalid && form.get('email').touched">
+          Valid email is required.
+        </div>
+      </div>
+      <button type="submit" [disabled]="form.invalid">Submit</button>
+    </form>
+  `
+})
+export class AppComponent implements OnInit {
+  form: FormGroup;
+
+  ngOnInit() {
+    this.form = new FormGroup({
+      name: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email])
+    });
+  }
+
+  onSubmit() {
+    console.log('Form Data: ', this.form.value);
+  }
+}

@@ -1,0 +1,41 @@
+Dependency Injection (DI) in Angular is a way to provide things (like services) that a class needs,  instead of class creating itself. This makes the code cleaner and easier to manage.
+
+Key Points:
+- Service: A class that does something useful, like fetching data.
+- Injector: The system that knows how to create and provide services.
+- Provider: Instructions for the injector on how to create a service.
+
+How It Works:
+1. Create a Service:
+
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root'  // This makes the service available everywhere in the app
+})
+export class ExampleService {
+  getData() {
+    return 'Some data';
+  }
+}
+
+2. Use the Service in a Component:
+
+import { Component, OnInit } from '@angular/core';
+import { ExampleService } from './example.service';
+
+@Component({
+  selector: 'app-example',
+  template: `<p>{{ data }}</p>`
+})
+export class ExampleComponent implements OnInit {
+  data: string;
+
+  constructor(private exampleService: ExampleService) {}
+
+  ngOnInit() {
+    this.data = this.exampleService.getData();
+  }
+}
+
+In simple terms, DI is like having a helper that gives you what you need, instead of you having to make it yourself. This keeps your code organized and easier to work with.

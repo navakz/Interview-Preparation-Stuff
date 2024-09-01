@@ -1,0 +1,13 @@
+JS
+https://youtube.com/shorts/prdALHQnCsc?si=-YYMVZWT0cqmcyP0 - classes
+https://youtube.com/shorts/2kJrQzHzy44?si=AEUq2DRr-wLtKhNX - inheritance
+https://youtube.com/shorts/V5qO9eIs5i0?si=9WFwxfI9yciQbx62 - volume of a sphere
+https://youtube.com/shorts/mNF6HCtPEs4?si=ELXqIgdzSRgHWm3z - callback
+
+https://youtube.com/shorts/4271L9A4Lcc?si=5WZRyxsSRaZOhsEM - daily code practice
+
+https://youtube.com/shorts/X2mqqnzemY4?si=6XNUOuNp-o2IEOx4 - group elements in array
+
+https://youtube.com/shorts/I5F2xP4kwWU?si=P2BQ2vBvFa84xoSk - call API in nodejs 
+
+https://youtube.com/shorts/8_jtiFfDtR8?si=COeDW-fEAlA8mUS7 - 

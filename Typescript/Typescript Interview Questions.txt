@@ -1,0 +1,208 @@
+Difference between map | forEach
+
+
+Difference between promise | async await
+
+
+TypeScript is a statically-typed superset of JavaScript, developed and maintained by Microsoft. It enables enhanced code maintainability and predictability. After compiling, TypeScript code is transpiled into standard, browser-compatible JavaScript.
+
+Tuples in TypeScript : It enforces fixed structure for arrays
+let user: [string, number] = ['Alice', 30];
+Here, user is a tuple where the first element is a string and the second element is a number. This can be useful in React for things like state management where you want to ensure that certain values are paired together.
+
+In TypeScript, both type and interface are used to define type
+type Point = {
+  x: number;
+  y: number;
+};
+
+interface Point {
+  x: number;
+  y: number;
+}
+
+type A = { a: number; };
+type B = { b: string; };
+type C = A & B;  // C has both properties a and b
+
+interface A {
+  a: number;
+}
+interface B {
+  b: string;
+}
+interface C extends A, B {
+  c: boolean;
+}
+
+
+
+Type System: Offers static typing, allowing developers to define the type of variables, parameters, and return values. This helps catch errors during development, reducing runtime issues.
+
+TypeScript brings functional programming patterns, classes, and access modifiers (such as public and private)
+
+TypeScript offers robust type-checking, increased code readability, and stronger compile-time error detection.
+
+Basic Types in TypeScript
+Boolean: Represents true/false values.
+
+Number: Applies to both integer and floating-point numbers.
+
+String: Refers to textual data.
+
+Any: Offers a dynamic type, which can be used to bypass type-checking. It's typically best to be avoided, as it defeats the purpose of using TypeScript, which is primarily focused on static typing. However, there are certain use cases where it becomes necessary.
+//let dynamicData: any = 20;
+
+Null and Undefined: Allow for the assignment of null and undefined values, respectively. However, this isn’t enabled by default, and these are probably better handled using the strict mode settings in TypeScript.
+
+Never: Represents the type of values that never occur. For instance, the return type of a function that doesn't reach its end or always throws an error
+//function errorMessage(message: string): never {throw new Error(message);}
+
+Object: Any JavaScript object.
+
+Function: Denotes a function type.
+//let calculate: Function;
+calculate = function (x: number, y: number): number {
+  return x + y;
+};
+
+In programming, HOISTING implicitly moves variable and function declarations to the top of their scope (either global or local) during the compilation phase.
+
+Use let when you want to define variables within a block scope. 
+
+In TypeScript, an interface defines the structure and types of its members. It acts as a contract for the required properties and methods, ensuring that implementing classes or objects match this structure.
+
+The Enum helps ensure the proper data type and its values.
+//enum MediaTypes {
+  Image = 'image',
+  Video = 'video',
+  Audio = 'audio'
+}
+
+// ✅ Accessing the value
+const associatedText: string = MediaTypes.Image;
+
+TypeScript employs a best common type algorithm to infer a variable's type
+In TypeScript, type inference is a core feature that allows the type of a variable to be automatically determined from its value. This provides the benefits of static typing without the need for explicit type annotations.
+let value = 10; // Type 'number' inferred
+let message = "Hello, TypeScript!"; // Type 'string' inferred
+
+function add(a: number, b: number) {
+    return a + b;
+}
+
+let sum = add(5, 7); // Type 'number' inferred
+
+Compile TypeScript (.ts) into JavaScript (.js) using TypeScript compiler (tsc). 
+You can customize the compilation process using tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES5",
+    "module": "commonjs",
+    "strict": true,    
+    "outDir": "dist",
+    "rootDir": "src"  
+  },
+  "include": [
+    "src/**/*.ts"    
+  ],
+  "exclude": [      
+    "node_modules",   
+    "**/*.spec.ts"    
+  ]
+}
+
+ Inheritance using ES6 Classes
+ 
+ class Animal {
+  private name: string;
+
+  constructor(theName: string) {
+    this.name = theName;
+  }
+
+  move(distanceInMeters: number = 0) {
+    console.log(`${this.name} moved ${distanceInMeters}m.`);
+  }
+}
+
+class Snake extends Animal {
+  constructor(name: string) {
+    super(name);
+  }
+
+  move(distanceInMeters = 5) {
+    console.log("Slithering...");
+    super.move(distanceInMeters);
+  }
+}
+
+const mySnake = new Snake("Cobra");
+mySnake.move();  // Output: Slithering... Cobra moved 5m.
+
+Access modifiers are TypeScript's way of controlling class member visibility
+
+Public: Default for class members. They are accessible from both inside and outside the class.
+
+Protected: Members can be accessed within the class and its subclasses. They help establish the "is-a" relationship.
+
+Private: Marks members as accessible only within the declaring class. This ensures they're not modified or accessed externally.
+
+Abstract classes in TypeScript can have static members, which belong to the class itself and not to any specific instance.
+
+abstract class Shape {
+    abstract getArea(): number;
+    abstract getPerimeter(): number;
+    color: string;
+
+    constructor(color: string) {
+        this.color = color;
+    }
+
+    static defaultColor: string = 'red';
+
+    describe() {
+        return `This shape is ${this.color}.`;
+    }
+}
+
+Generics allow creating 'type variables' which can be used to create classes, functions & type aliases that don't need to explicitly define the types that they use.
+
+Generics makes it easier to write reusable code.
+
+Generics - > allow to create reusable and flexible components without comprimising on type safety.
+Enable you to create functions, classes , interfaces that can work with different types while still providing the benefits of 
+static typing
+
+function createPair<S, T>(v1: S, v2: T): [S, T] {
+  return [v1, v2];
+}
+console.log(createPair<string, number>('hello', 42)); // ['hello', 42]
+console.log(createPair<number, string>(42,'hello')); // [42,'hello']
+
+
+String interpolation in TypeScript is defined as an expression that is used to evaluate string literals that contain one or more expressions.
+There is specifically no syntax for string interpolation, but we need to enclose the string using backticks along with placeholder ${} instead of single quotes '' or double quotes ""
+
+let empName: string = "John Doe";
+console.log(`${empName} is one of the most valuable employee of the year`);
+
+Interface -> serves as outline for the class. defines the shape of object/class without implementing its actual functionality
+class - > methods are defined for implementation
+
+how to check null or undefined
+1. Using equality operator (===)
+2. Optional Chaining operator (?)
+
+In Typescript, Ambient in refers to the declarations used to inform a compiler that the actual piece of code exists in a different place. For example, a developer might want to write a third-party library in plain JS using jQuery or Angular. In this situation, they would need to use jQuery, Angular, Node in Typescript, and they would need to use Ambient declaration to access the third-party library.
+
+The nullish coalescing (??) operator is a logical operator that returns its right-hand side operand when its left-hand side operand is null or undefined, and otherwise returns its left-hand side operand.
+
+const foo = null ?? 'default string';
+console.log(foo);
+// Expected output: "default string"
+
+const baz = 0 ?? 42;
+console.log(baz);
+// Expected output: 0
+

@@ -1,0 +1,442 @@
+Hoisting : A phenomenon where JS functions and variables are used before their declarations.
+Ex: 
+console.log(y); // undefined
+var y = 10;
+console.log(y); // 10
+-----------------------------------
+hello(); // "Hello, World!"
+
+function hello() {
+  console.log("Hello, World!");
+}
+
+Function Currying: A phenomenon where Nested function having a single parameter.
+Ex: 
+// Non-curried function
+function add(x, y, z) {
+  return x + y + z;
+}
+
+console.log(add(2, 3, 4)); // Output: 9
+
+// Curried version
+function curryAdd(x) {
+  return function(y) {
+    return function(z) {
+      return x + y + z;
+    };
+  };
+}
+
+console.log(curryAdd(2)(3)(4)); // Output: 9
+
+Virtual DOM :  Virtual representation of the UI kept in the memory and synced with Real DOM
+
+Flexbox in CSS : Layout Module in CSS
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+Rest Operator : 
+
+Spread Operator :
+
+Event loop : 
+
+promise 
+
+
+callback
+
+
+closure 
+
+
+life cycle methods of react ? what are its uses ?
+
+
+useEffect in life cycle methods with example
+
+
+react hooks in life cycle methods
+
+
+how do you manage state in a component
+
+
+how do you manage parent state in a inner component
+
+
+how can you avoid prop drilling ?
+
+
+Difference between context api and redux with example in context of prop drilling
+
+
+redux state management ? what is the useReducer and useSelector ?.
+
+
+what is the use of reduce and filter function 
+- reduce(): Used to combine all elements of an array into a single value by applying a function, starting with an initial value.
+- filter(): Used to create a new array containing only elements that satisfy a specified condition.
+
+const numbers = [1, 2, 3, 4, 5];
+const sum = numbers.reduce((accumulator, currentValue) => {
+  return accumulator + currentValue;
+}, 0);
+
+console.log(sum); // Output: 15
+
+const people = [
+  { name: 'John', age: 25 },
+  { name: 'Jane', age: 30 },
+  { name: 'Jim', age: 20 }
+];
+
+const adults = people.filter(person => person.age >= 21);
+
+console.log(adults); 
+// Output: [{ name: 'John', age: 25 }, { name: 'Jane', age: 30 }]
+
+
+
+In redux at which stage will you be calling the fetch API ?
+
+
+Middleware in redux
+
+
+
+redux saga vs redux thunk use case ?
+
+
+
+server side rendering in react ?
+
+
+-- difference between react and nextjs 
+
+styling react compoenent . any library used ? - Antd 
+
+
+can we use multiple class with style component
+
+what is your testing strategy ? // taking snapshot for every compoenent
+
+what is your approach in making multilingual website using react ?
+
+---------------------------------------------------------------------------------------------------
+Input:
+
+const obj =[{
+key: 'Sample1',
+data: 'Data1'
+},
+{
+key: 'Sample1',
+data: 'Data1'
+},
+{
+key: 'Sample2',
+data: 'Data2'
+},
+{
+key: 'Sample3',
+data: 'Data3'
+}
+
+]
+
+const output = {};
+// Data transformation
+
+obj.forEach(item=>{
+if(output[item.key]){
+output[item.key].push(item);
+}else {
+output[item.key] = [item];
+}
+});
+
+console.log(output);
+
+Output :
+{
+'Sample1': [
+{key:'sample1', data:'Data1'},
+{key:'sample1', data:'Data1'}
+],
+
+'Sample2':[{key:'sample2', data:'Data2'}],
+
+'Sample3':[{key:'sample3', data:'Data3'}],
+}
+------------------------------------------------------------------------------------------------
+const a = [1,2,3, [4,[5,6]], 7,8];
+
+function flattenArray(a){
+}
+
+const result = flattenArray(a);
+
+console.log(result);// [1,2,3,4,5,6,7,8]
+
+function flattenArray(a, flattenedArr){
+for(let i=0; i< a.length; i++){
+if(typeof a[i] === 'number') {
+  flattenedArr.push(a[i]);
+} else {
+  flattenArray(a[i], flattenedArr);}
+}
+}
+return flattenedArr;
+}
+
+console.log(flattenArray(a, []));
+--------------------------------------------------------------------------------------------
+Consider if the array includes object data type with number . 
+
+const a = [1,2,3, {test: "key"}, [4,[5,6]], 7, 8];
+
+
+function flattenArray(a, flattenedArr){
+for(let i=0; i<a.length; i++){
+if(Array.isArray(a[i])){
+  flattenArray(a[i], flattenedArr);
+} else {
+  flattenArr.push(a[i]);
+}
+}
+return flattenedArr;
+}
+
+
+console.log(flattenArray(a, []));
+
+----------------------------------------------------------------------------------------------
+
+Callback function - passing a function to another function as argument.
+
+// Callback function example with setTimeout
+function greet(name) {
+  console.log('Hello, ' + name);
+}
+
+function processUserInput(callback) {
+  let name = prompt('Please enter your name.');
+  callback(name); // greet function is passed as a callback and executed here
+}
+
+processUserInput(greet);
+
+
+----------------------------------------------------------------------------------------------------
+
+Recursive function -  A function that calls itself during its execution
+
+// Recursive function to calculate the factorial of a number
+function factorial(n) {
+  if (n === 0) { // Base case
+    return 1;
+  } else {
+    return n * factorial(n - 1); // Recursive case
+  }
+}
+
+console.log(factorial(5)); // Output: 120
+
+
+1. write a JS function to find the first non-repeated character of the string.
+
+function nonrepeat(str){
+for(let i=0; i< str.lenth; i++){
+let j= str.charAt(i);
+if(str.indexOf(j)=== str.lastIndexOf(j)){
+return j;
+}
+}
+}
+
+console.log(nonrepeat('abcab'))
+
+
+2. Any similarities between class based and functional
+
+Class-based Components: Use a render() method to return JSX.
+Functional Components: Directly return JSX from the function.
+
+// Class-based Component
+class MyComponent extends React.Component {
+  render() {
+    return <div>Hello from a class component!</div>;
+  }
+}
+
+// Functional Component
+function MyComponent() {
+  return <div>Hello from a functional component!</div>;
+}
+
+Class-based Components: Use lifecycle methods (componentDidMount, componentDidUpdate, componentWillUnmount, etc.) to perform side effects.
+Functional Components: Use the useEffect hook to manage side effects, which can replicate the behavior of all class lifecycle methods.
+
+// Class-based Component
+class DataFetcher extends React.Component {
+  componentDidMount() {
+    // Fetch data when the component is mounted
+    this.fetchData();
+  }
+  
+  componentDidUpdate(prevProps) {
+    // Re-fetch data if the props change
+    if (this.props.id !== prevProps.id) {
+      this.fetchData();
+    }
+  }
+  
+  componentWillUnmount() {
+    // Cleanup
+  }
+  
+  fetchData() {
+    // Fetch logic
+  }
+  
+  render() {
+    return <div>Data: {this.state.data}</div>;
+  }
+}
+
+// Functional Component
+function DataFetcher({ id }) {
+  useEffect(() => {
+    // Fetch data when the component is mounted or id changes
+    fetchData();
+    
+    return () => {
+      // Cleanup
+    };
+  }, [id]);
+  
+  const fetchData = () => {
+    // Fetch logic
+  };
+  
+  return <div>Data: {/* Render data here */}</div>;
+}
+
+Both types of components can receive props and use them to render data.
+
+// Class-based Component
+class Greeting extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}!</h1>;
+  }
+}
+
+// Functional Component
+function Greeting(props) {
+  return <h1>Hello, {props.name}!</h1>;
+}
+
+
+
+
+3). How would you call an public REST API when the functional component is mounted and unmounted?. Explain with example
+
+- The return statement inside the useEffect defines a cleanup function that will be called when the component is unmounted.
+
+
+
+4). What is purpose of useRef() hook?
+
+6) How do you handle errors (eg. missing data in rendering mode)  from crashing the page in functional component ?
+
+- Conditional Rendering: Check for required data before rendering to prevent errors.
+function UserProfile({ user }) {
+  if (!user) {
+    return <div>User data is missing</div>; // Render a fallback UI
+  }
+
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+    </div>
+  );
+}
+
+- try...catch in Event Handlers: Handle errors in async operations or events.
+
+
+7). What is the purpose of using Lazy Loading ?
+
+- React.lazy(): This function takes a function that returns a dynamic import() statement and returns a component that will load when needed.
+- React.Suspense: This component is used to wrap lazy-loaded components. It takes a fallback prop, which is rendered while the lazy component is being loaded.
+
+import React, { Suspense } from 'react';
+
+// Lazy load the UserProfile component
+const UserProfile = React.lazy(() => import('./UserProfile'));
+
+function App() {
+  return (
+    <div>
+      <h1>Welcome to the App</h1>
+      
+      {/* Suspense is used to display a fallback UI while the component is loading */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <UserProfile userId={1} />
+      </Suspense>
+    </div>
+  );
+}
+
+export default App;
+
+--------------------------------------------------------------------------------------------------------
+A React Assessment Test evaluates candidates on:
+
+Core concepts like components, JSX, state, and props.
+Creating React components and managing their lifecycle.
+Handling state in React and passing it between components.
+Passing data between parent and child components.
+Managing user interactions in React components.
+Displaying components conditionally.
+Rendering lists efficiently and providing unique keys.
+Handling form data in React.
+Styling React components using various methods.
+Implementing client-side routing with React Router.
+Using React Hooks for state and side effects.
+Managing application-level state and data sharing.
+Understanding class-based and functional component lifecycles.
+Gracefully handling errors in React.
+Knowing when to use each type.
+Testing React components with tools like Jest.
+Creating reusable components and libraries.
+Making API requests in React applications.
+Implementing performance enhancements.
+Inter-component communication methods.
+Following development best practices.
+Organizing React projects effectively.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

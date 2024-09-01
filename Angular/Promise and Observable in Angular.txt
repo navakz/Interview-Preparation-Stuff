@@ -1,0 +1,59 @@
+When to Use Promises
+- When you only need a single response from an asynchronous call.
+- When you prefer simplicity and don't need the advanced features of Observables.
+- Commonly used with native browser APIs, such as fetch.
+
+When to Use Observables
+- When dealing with multiple values over time, such as streams of data (e.g., WebSocket, events).
+- When you need the ability to cancel the operation.
+- When you need to compose multiple asynchronous operations with powerful operators.
+
+Using Promises and Observables in Angular
+Angular's HttpClient module uses Observables, but you can convert them to Promises if needed.
+
+Using Promises with Angular's HttpClient:
+
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  template: '<p>{{ data }}</p>'
+})
+export class AppComponent implements OnInit {
+  data: string;
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.getData().then(data => this.data = data);
+  }
+
+  getData(): Promise<string> {
+    return this.http.get<string>('https://api.example.com/data').toPromise();
+  }
+}
+
+Using Observables with Angular's HttpClient:
+
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+
+@Component({
+  selector: 'app-root',
+  template: '<p>{{ data }}</p>'
+})
+export class AppComponent implements OnInit {
+  data: string;
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit() {
+    this.getData().subscribe(data => this.data = data);
+  }
+
+  getData(): Observable<string> {
+    return this.http.get<string>('https://api.example.com/data');
+  }
+}

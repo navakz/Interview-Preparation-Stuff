@@ -1,0 +1,134 @@
+1. Virtual DOM - is a concept where a virtual representation of the UI is kept in memory and synced with the real DOM
+- When the state of an application changes, a new Virtual DOM tree is created.The Virtual DOM then compares this new tree with the previous one (a process called "reconciliation").
+- Only the differences (or "diffs") are then applied to the Real DOM, making the process more efficient.
+Ex:
+class ExampleComponent extends React.Component {
+  render() {
+    return <div>Hello, Virtual DOM!</div>;
+  }
+}
+
+ReactDOM.render(<ExampleComponent />, document.getElementById('example'));
+
+2. Real DOM - Real DOM (Document Object Model) is a standard for representing and interacting with objects in HTML, XHTML, and XML documents.
+Ex:
+<!DOCTYPE html>
+<html>
+<body>
+  <div id="example">Hello, world!</div>
+  <script>
+    document.getElementById("example").innerHTML = "Hello, Real DOM!";
+  </script>
+</body>
+</html>
+- When the DOM is updated (e.g., an element is added or removed), the entire tree is updated, and the page is re-rendered
+- Frequent and large updates can cause performance issues due to the cost of re-rendering the entire DOM.
+
+3. Shadow DOM - is a web standard that enables encapsulation of a DOM subtree, allowing for better component isolation and style scoping
+- Allows for the encapsulation of DOM and CSS, ensuring that styles and scripts do not leak out or affect other parts of the document.
+Ex:
+<!DOCTYPE html>
+<html>
+<body>
+  <div id="host"></div>
+  <script>
+    // Create a shadow root
+    let host = document.getElementById('host');
+    let shadowRoot = host.attachShadow({mode: 'open'});
+
+    // Attach styles and elements to the shadow root
+    shadowRoot.innerHTML = `
+      <style>
+        p {
+          color: blue;
+        }
+      </style>
+      <p>Hello, Shadow DOM!</p>
+    `;
+  </script>
+</body>
+</html>
+
+Comparison b/w Real , Virtual, Shadow DOM
+---------------------------------------------------------
+Real DOM:
+- Direct interaction with the actual DOM tree.
+- Immediate updates and rendering, which can be slow for complex applications.
+
+Virtual DOM:
+- An abstraction that optimizes updates by minimizing changes to the Real DOM.
+- Improves performance, especially in dynamic applications with frequent updates.
+
+Shadow DOM:
+- Provides encapsulation for components, ensuring isolation of styles and scripts.
+- Used for creating self-contained web components with scoped styling and behavior.
+
+4. Features of ES5, ES6
+5. 
+- key : A key is a unique identifier and it is used to identify which items have changed, been updated or deleted from the lists.
+- props : (properties) -  pass data from a parent component to a child component.
+- state : it stores the application state.
+- refs : Provides access to DOM nodes.
+6. Pure component - Base comp. class which checks the state & props of a comp. to know whether the comp. should be updated.
+- Impure components : Directly manipulates the DOM.
+7. lazy Loading - which allows for some components to load later than other components.
+8. useState - Manages state
+9. useEffect - Performs side effects , useContext - Accesses context values
+10.useReducer - Manages complex state logic using reducers.
+useCallback - Memoizes a callback function to optimize performance.
+
+11.ContextAPI - Share Data globally across the component without manually passing the props at each level.
+Structure: MyContext = createContext() - > MyContext.Provider value={} -> useContext(MyContext)
+
+13.Prop Drilling/threading - Phenomenon where props are passed from one part of tree to another by going through other parts that do not need data.
+14.ShouldComponentUpdate - prevents rerendering of a component. [It controls by comparing the current & next props and state => returns a boolean value indicating whether to update or not ]
+15.Synthetic Events - (It is an object that serves as a cross browser wrapper of the browser’s native event.)Events like e.stopPropagation, e.PreventDefault which help to run the react app across different browsers
+16.HOC - They are the custom components which wraps another component
+17.Redux (Predictable state container for JS apps). Componenets of Redux ?.
+18.Action(describes what happened), Reducer(determines how the state will change), Store(application state is stored), View(displays data from store) 
+19. Shallow Rendering (involves rendering only the top level component), Full Rendering (involves rendering the entire component tree)
+20. React Profiler | Chrome Dev Tools - to identify performance bottlenecs
+21. Handling Errors in React - Using Error boundaries implemented in componentDidCatch Method.
+22. React Lifecycle Methods
+23.  Mounting Phase - getDefaultProps(), getInitialState(), componentWillMount(), render(), componentDidMount()
+24.  Updating Phase - getDerivedStateFromProps(), componentWillReceiveProps(), shouldComponentUpdate(), componentWillUpdate(), componentDidUpdate()
+25. Unmounting Phase - componentWillUnmount()
+26. useMemo - A hook that is used for CPU Expensive functions which returns a memoized(cache) value
+27. React Hooks : Fn's which allows to use state & other react features without writing a class component.
+28. React Context : A way to manage state globally (overcome the problems of passing props)
+29. useRef : Allows to persist values b/w renders.
+30. useCallback : Returns a memoized function.
+31. class component : Uses State Management , access to lifecycle methods, bit slow performance, render() is used.
+32. functional component : No State Management, No access to lifecycle methods, faster performance, No render() is used.
+33. Spread Opeartor: Divides values in arrays and strings into individual elements
+let a1= [4,5,6];
+let a2= [1,2,...a1];
+console.log(a2)// [1,2,4,5,6]
+34. Rest Operator : Puts the values of user defined data into JS array.
+function testRest(...values){return values}
+testRest('e','r') // ['e','r']
+35. Destructuring : A way to extract data from arrays and objects into a single variable. 
+let g1 = ['Hello', 'Hi']
+let [g2, g3] = g1;
+console.log(g1, g2); // Hello Hi.
+
+36. Webpack : Tool for bundling JS files for usage in browsers
+37. SASS (Syntactically Awesome Style Sheets) : Files are executed in server & send CSS to browser.
+38. SCSS (Sassy CSS) : Newer syntax for SASS
+39. React App for SEO : 
+1. Use server side rendering
+2. Use relevant keywords in meta tags
+3. Use semantic HTML (heading , paragraph, list, table)
+4. Don't use generic html (div, span)
+5. optimize images , use internal linking
+
+40. IIFE / Self invoking fn : A fn that runs as soon as it is defined.
+41. Object.freeze(): Prevent JSON element to be changed.
+
+42. const : Identifier can't be reassigned.
+43. let : Identifier which can be reassigned.
+44. var : Identifier may or may not be reassigned.
+45. NPM is a package management that is used to install, uninstall, and update Javascript packages on your workstation 
+46. NPX is a package executer that is used to directly execute Javascript packages without installing them.
+
+

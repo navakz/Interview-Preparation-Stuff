@@ -1,0 +1,52 @@
+how do you copy data from master Db's to slave Db's
+
+Phases in event loop
+
+virtual view
+
+async function which returns a promise
+
+order of micro macro
+
+connection pooling
+
+tuples in typescript
+
+how do you increase the performance for a SP
+
+
+difference between inline element and block element
+
+
+variable shadowing
+
+nodejs 
+
+diff b/w setTimeout and setImmediate
+
+var x= 10;
+
+function test(){
+var x= 20;
+}
+
+var x= 10;
+
+function test(){
+var x= 20;
+}
+
+
+scoping in JS
+
+diff b/w async await and promise
+
+object.freeze()
+
+
+
+
+
+
+
+

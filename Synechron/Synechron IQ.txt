@@ -1,0 +1,327 @@
+interface - An interface defines set of properties for an object.
+
+Route Protection - Its used for granting access to authorized users.
+
+Hoisting - Hoisting moves variables and functions to the top of their scope reagrdless of where they are declared.
+Ex: 
+//foo(); -> "function foo"
+// bar(); - > TypeError (bar is not a funciton)
+
+
+// function declaration. Its initialized at compile time only, that is why its available everywhere.
+function foo(){ 
+console.log('function foo')
+}
+
+// function expression. Its not hoisted. It will be called only when interpreter reaches this line. Therefore, we cannot use function expression before they are defined.
+const bar = () =>{
+ console.log('function bar');
+}
+------------------------------------------------------------------------------------------------------
+
+React Fiber : Allow rendering work to be split into smaller units instead whole tree comparison.
+
+------------------------------------------------------------------------------------------------------
+
+MVW - Model view whatever 
+
+
+prop drilling : Passing props through every component level (child -> innerchild -> innerchild)
+
+Garbage Collection : Automatically freeing up memory by removing unused variables and objects
+
+fallback component - A fallback component in React is used to handle scenarios where a route or component or an asynchronous operation fails to load or if you want to show a loading state while the actual content is being fetched or rendered.
+
+Prototype - Its an internal property of objects that enables them to inherit features such as properties and methods from other objects.
+
+
+Microtasks: These include promise resolutions, process.nextTick, and MutationObserver callbacks. They are executed immediately after the currently executing script and before any rendering or I/O tasks.
+
+Macrotasks: These include setTimeout, setInterval, and setImmediate. They are executed in their respective phases of the event loop.
+
+Order of Execution
+1. Synchronous Code: Executes first.
+2. Microtasks: Executed next, before moving on to the next event loop phase.
+3. Macrotasks: Processed after the microtasks queue is empty and when the event loop moves to the appropriate phase.
+
+
+console.log('Start');
+
+// Schedule a microtask with Promise
+Promise.resolve().then(() => {
+  console.log('Promise microtask');
+});
+
+// Schedule a macrotask with setTimeout
+setTimeout(() => {
+  console.log('setTimeout macrotask');
+}, 0);
+
+// Schedule another microtask with process.nextTick
+process.nextTick(() => {
+  console.log('process.nextTick microtask');
+});
+
+console.log('End');
+
+Output:
+
+Start
+End
+process.nextTick microtask
+Promise microtask
+setTimeout macrotask
+-------------------------------------------------------------------------------------------------
+CORS - Allows web servers to control which domains can access their resources.
+
+API gaeteway in Microservices : Central point of entry for client requests. It manages (Authenticates, Authorizes, Caching, logging, monitoring,) and routes (Routing, Load Balancing) requests to the appropriate microservices.
+
+// api-gateway.js
+const express = require('express');
+const axios = require('axios');
+
+const app = express();
+const PORT = 3000;
+
+// Middleware for logging requests
+app.use((req, res, next) => {
+  console.log(`Incoming request: ${req.method} ${req.url}`);
+  next();
+});
+
+// Proxy requests to the User Service
+app.use('/users', async (req, res) => {
+  try {
+    const response = await axios.get(`http://localhost:4000${req.url}`);
+    res.send(response.data);
+  } catch (error) {
+    res.status(500).send('Error contacting user service');
+  }
+});
+
+// Proxy requests to the Orders Service
+app.use('/orders', async (req, res) => {
+  try {
+    const response = await axios.get(`http://localhost:5000${req.url}`);
+    res.send(response.data);
+  } catch (error) {
+    res.status(500).send('Error contacting order service');
+  }
+});
+
+// Start the API Gateway
+app.listen(PORT, () => {
+  console.log(`API Gateway listening on port ${PORT}`);
+});
+
+
+// user-service.js
+const express = require('express');
+const app = express();
+const PORT = 4000;
+
+app.get('/users/:id', (req, res) => {
+  // Simulate user data
+  res.json({ id: req.params.id, name: 'John Doe' });
+});
+
+app.listen(PORT, () => {
+  console.log(`User service listening on port ${PORT}`);
+});
+
+
+// order-service.js
+const express = require('express');
+const app = express();
+const PORT = 5000;
+
+app.get('/orders/:id', (req, res) => {
+  // Simulate order data
+  res.json({ id: req.params.id, item: 'Laptop' });
+});
+
+app.listen(PORT, () => {
+  console.log(`Order service listening on port ${PORT}`);
+});
+
+
+
+All Basic questions related DOM, Virtual dom, DOM Manipulation, Redux Thunk saga, data flow, CSS different question like different way to place element in center, DOM node space, hidden/none different. In JS- async await, promise syntax, array code
+
+
+difference between mounting and rendering
+Mounting: Often used for one-time setup tasks like data fetching or subscriptions.
+Rendering: Handles how the component updates its output based on current state and props.
+
+
+React.Memo : It allows you to optimize the performance of functional components by memoizing them. This means that React will only re-render the component if its props change.
+
+import React from 'react';
+
+// A functional component that will be memoized
+const MyComponent = React.memo(({ name }) => {
+  console.log('Rendering MyComponent');
+  return <div>Hello, {name}!</div>;
+});
+
+export default function App() {
+  const [name, setName] = React.useState('Alice');
+  const [count, setCount] = React.useState(0);
+
+  return (
+    <div>
+      <MyComponent name={name} />
+      <button onClick={() => setName(name === 'Alice' ? 'Bob' : 'Alice')}>
+        Toggle Name
+      </button>
+      <button onClick={() => setCount(count + 1)}>
+        Increment Count
+      </button>
+    </div>
+  );
+}
+
+In this example:
+
+MyComponent is wrapped with React.memo, so it only re-renders if its name prop changes.
+Changing the count state in the App component does not cause MyComponent to re-render because name has not changed.
+
+--------------------------------------------------------------------------------------------------------
+
+HOC and it's use case
+
+Higher-order components are a design pattern in React where a function takes a component as an argument and returns an enhanced new component.
+
+unidirectional data flow
+
+
+how to optimize react application ?. Any example ?. // pagination, infinite scroll , caching
+
+------------------------------------------------------------------------------------------------
+pass data from child to parent - callback, 
+
+import React, { useState } from 'react';
+import ChildComponent from './ChildComponent'; // Assume ChildComponent is defined in another file
+
+function ParentComponent() {
+  const [data, setData] = useState('');
+
+  // Callback function to handle data from child
+  const handleDataFromChild = (childData) => {
+    console.log('Data received from child:', childData);
+    setData(childData);
+  };
+
+  return (
+    <div>
+      <h1>Data from Child: {data}</h1>
+      <ChildComponent onSendData={handleDataFromChild} />
+    </div>
+  );
+}
+
+export default ParentComponent;
+
+
+import React from 'react';
+
+function ChildComponent({ onSendData }) {
+  const sendData = () => {
+    // Data to be sent to the parent
+    const data = 'Hello from Child!';
+    
+    // Call the callback function passed from the parent
+    onSendData(data);
+  };
+
+  return (
+    <div>
+      <button onClick={sendData}>Send Data to Parent</button>
+    </div>
+  );
+}
+
+export default ChildComponent;
+---------------------------------------------------------------------------------------------------
+
+
+different ways to call api in react - fetch , axios
+
+
+react context api - 
+
+
+what is redux how it works ?
+
+
+middleware in redux 
+
+
+redux thunk vs saga
+
+prmises
+
+callback hell
+
+es6 features
+
+
+
+
+
+
+
+
+Q1. How can we adapt the frontend to different view of devices?
+View Answers (1)
+
+Q2. What is a closure in Javascript?
+View Answers (1)
+
+Q3. What are the advantages of using Typescript? mention your favorite features
+View Answers (1)
+
+Q4. Can you describe some Architectural Patterns ?
+View Answers (1)
+
+Q5. Can you describe some Design Patterns ?
+View Answers (1)
+
+Q6. Do you configured some part of a CI/CD pipeline?
+View Answers (1)
+
+Q7. Can you mention some popular hacker attacks?(xxs, sql injection, etc)
+View Answers (1)
+
+Q8. Solve a React problem, the goal is not trigger re-renders of a siblings components from a parent node, but avoiding the memo, useMemo, or useCallback react util...read more
+Add Answer
+
+Q9. Describe the benefits of using SSR (server side rendering)
+View Answers (1)
+
+Q10. How can we fetch our data ? (fetch api, axios, forms, websockets, graphql, trpc, etc)
+Add Answer
+
+Q11. Name performance techniques. It's a wide topic so prepared to explain in detail
+Add Answer
+
+Q12. Do you know how to measure web performance? (lighthouse with it's scores measures)
+Add Answer
+
+Q13. Resolve a Leetcode problem -Merge two intervals.
+
+
+
+which library is used for converting ES6 to web-browser JS ?.
+with es6, advantages of es6 when compared to es5
+manipulating the data in terms of ES6
+designing a web page - html, css , bootstrap
+
+how do you debug? how do you use devtools
+how do you increase the performance of the application
+
+react profiler - see youtube
+
+benefit of using redux 
+
+in amazon and flipkart . user scrools 

@@ -1,0 +1,133 @@
+Share data between components in Angular
+
+# Depending upon the realtionship b/w the components . Some common methods are :
+
+1. Parent to Child: Using Input Binding
+You can pass data from a parent component to a child component using the @Input decorator.
+
+Parent Component Template:
+<app-child [childMessage]="parentMessage"></app-child>
+
+Parent Component Class:
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-parent',
+  template: `<app-child [childMessage]="parentMessage"></app-child>`
+})
+export class ParentComponent {
+  parentMessage = 'Message from parent';
+}
+
+Child Component Class:
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<p>{{ childMessage }}</p>`
+})
+export class ChildComponent {
+  @Input() childMessage: string;
+}
+
+2. Child to Parent: Using Output and EventEmitter
+You can pass data from a child component to a parent component using the @Output decorator and EventEmitter.
+
+Child Component Class:
+import { Component, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-child',
+  template: `<button (click)="sendMessage()">Send Message</button>`
+})
+export class ChildComponent {
+  @Output() messageEvent = new EventEmitter<string>();
+
+  sendMessage() {
+    this.messageEvent.emit('Message from child');
+  }
+}
+
+Parent Component Template:
+<app-child (messageEvent)="receiveMessage($event)"></app-child>
+<p>{{ message }}</p>
+
+Parent Component Class:
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-parent',
+  template: `
+    <app-child (messageEvent)="receiveMessage($event)"></app-child>
+    <p>{{ message }}</p>
+  `
+})
+export class ParentComponent {
+  message: string;
+
+  receiveMessage($event: string) {
+    this.message = $event;
+  }
+}
+
+
+
+3. Sibling Components: Using a Shared Service
+You can share data between sibling components using a shared service with a subject or observable.
+
+Shared Service:
+
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class DataService {
+  private messageSource = new Subject<string>();
+  currentMessage = this.messageSource.asObservable();
+
+  changeMessage(message: string) {
+    this.messageSource.next(message);
+  }
+}
+
+Sibling Component 1:
+
+import { Component } from '@angular/core';
+import { DataService } from './data.service';
+
+@Component({
+  selector: 'app-sibling1',
+  template: `
+    <button (click)="newMessage()">New Message</button>
+  `
+})
+export class Sibling1Component {
+  constructor(private dataService: DataService) {}
+
+  newMessage() {
+    this.dataService.changeMessage('Hello from Sibling 1');
+  }
+}
+
+Sibling Component 2:
+
+import { Component, OnInit } from '@angular/core';
+import { DataService } from './data.service';
+
+@Component({
+  selector: 'app-sibling2',
+  template: `
+    <p>{{ message }}</p>
+  `
+})
+export class Sibling2Component implements OnInit {
+  message: string;
+
+  constructor(private dataService: DataService) {}
+
+  ngOnInit() {
+    this.dataService.currentMessage.subscribe(message => this.message = message);
+  }
+} 

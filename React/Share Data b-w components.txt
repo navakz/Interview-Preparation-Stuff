@@ -1,0 +1,206 @@
+In React, sharing data between components can be achieved through various techniques, depending on the structure and complexity of your application. Here’s a rundown of common methods to share data:
+
+Sharing Data : 
+
+1. Props
+Props (short for properties) are the most straightforward way to pass data from a parent component to a child component.
+
+Example:
+
+// ParentComponent.js
+import React from 'react';
+import ChildComponent from './ChildComponent';
+
+function ParentComponent() {
+  const message = 'Hello from Parent';
+
+  return <ChildComponent message={message} />;
+}
+
+export default ParentComponent;
+
+// ChildComponent.js
+import React from 'react';
+
+function ChildComponent({ message }) {
+  return <div>{message}</div>;
+}
+
+export default ChildComponent;
+
+2. Context API
+The Context API allows you to share values like themes, user authentication, or any other global state across your entire component tree without passing props manually through every level.
+
+import { createContext, useContext } from "react";
+
+const moods ={
+    happy: ':)',
+    sad:':('
+};
+const MoodContext = createContext(moods)
+function UseContext(){
+    return(
+    <MoodContext.Provider value={moods.happy}>
+        <MoodEmoji/>
+    </MoodContext.Provider>
+    )
+}
+
+function MoodEmoji(){
+    const moodEmoji = useContext(MoodContext);
+    return (<p>{moodEmoji}</p>)
+}
+
+export default UseContext;
+
+3. State Management Libraries
+For more complex state management, you might use libraries like Redux, Zustand, or Recoil.
+
+Redux Example:
+
+Install Redux:
+
+npm install redux react-redux
+
+Setup Redux Store:
+
+// store.js
+import { createStore } from 'redux';
+
+const initialState = {
+  value: 'Default Value',
+};
+
+function reducer(state = initialState, action) {
+  switch (action.type) {
+    case 'SET_VALUE':
+      return { ...state, value: action.payload };
+    default:
+      return state;
+  }
+}
+
+const store = createStore(reducer);
+
+export default store;
+Provide Store:
+
+// App.js
+import React from 'react';
+import { Provider } from 'react-redux';
+import store from './store';
+import ComponentA from './ComponentA';
+
+function App() {
+  return (
+    <Provider store={store}>
+      <ComponentA />
+    </Provider>
+  );
+}
+
+export default App;
+Connect Components:
+
+// ComponentA.js
+import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+
+function ComponentA() {
+  const value = useSelector(state => state.value);
+  const dispatch = useDispatch();
+
+  return (
+    <div>
+      <div>Value in Component A: {value}</div>
+      <button onClick={() => dispatch({ type: 'SET_VALUE', payload: 'New Value' })}>
+        Change Value
+      </button>
+    </div>
+  );
+}
+
+export default ComponentA;
+4. Custom Hooks
+Custom hooks can be used to share logic and state between components in a reusable way.
+
+Creating a Custom Hook:
+
+// useCounter.js
+import { useState } from 'react';
+
+function useCounter() {
+  const [count, setCount] = useState(0);
+
+  const increment = () => setCount(count + 1);
+  const decrement = () => setCount(count - 1);
+
+  return { count, increment, decrement };
+}
+
+export default useCounter;
+Using the Custom Hook:
+
+// ComponentA.js
+import React from 'react';
+import useCounter from './useCounter';
+
+function ComponentA() {
+  const { count, increment, decrement } = useCounter();
+
+  return (
+    <div>
+      <div>Count: {count}</div>
+      <button onClick={increment}>Increment</button>
+      <button onClick={decrement}>Decrement</button>
+    </div>
+  );
+}
+
+export default ComponentA;
+
+
+
+- Zustand
+
+Create a store using "create" from Zustand. This store can hold your state and actions.
+
+// src/store.js
+import create from 'zustand';
+
+const useStore = create((set) => ({
+  count: 0,
+  increase: () => set((state) => ({ count: state.count + 1 })),
+  decrease: () => set((state) => ({ count: state.count - 1 })),
+}));
+
+export default useStore;
+
+
+// src/App.js
+import React from 'react';
+import useStore from './store';
+
+function App() {
+  const count = useStore((state) => state.count);
+  const increase = useStore((state) => state.increase);
+  const decrease = useStore((state) => state.decrease);
+
+  return (
+    <div style={{ textAlign: 'center', marginTop: '50px' }}>
+      <h1>Counter: {count}</h1>
+      <button onClick={increase}>Increase</button>
+      <button onClick={decrease}>Decrease</button>
+    </div>
+  );
+}
+
+export default App;
+
+Advanced Features
+Zustand also supports more advanced features, such as:
+
+- Persisting State: Persisting state to local storage.
+- Middleware: Adding middleware for actions, such as logging.
+- Selectors: Selecting specific parts of the state to avoid unnecessary re-renders.
+- Context Integration: Integrating with React context for more complex scenarios.
